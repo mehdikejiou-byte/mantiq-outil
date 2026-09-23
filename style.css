@@ -414,6 +414,17 @@ section{padding-block: clamp(36px, 4.5vw, 64px);}
 .footer-social a:hover{ background:rgba(255,255,255,.16); }
 .footer-social svg{ width:16px; height:16px; }
 .footer-bottom{ position:relative; z-index:1; border-top:1px solid rgba(255,255,255,.1); padding-block:18px; text-align:center; font-size:.8rem; opacity:.7; }
+.footer-legal-ids{ font-size:.76rem; opacity:.85; margin-bottom:8px; line-height:1.6; }
+
+/* ---------------- page légale ---------------- */
+.legal-content h2{ font-size:1.25rem; color:var(--teal-800); font-weight:800; margin-top:38px; margin-bottom:12px; }
+.legal-content h2:first-child{ margin-top:0; }
+.legal-content p{ color:var(--ink-soft); line-height:1.7; margin-bottom:12px; }
+.legal-content ul{ margin:4px 0 16px 20px; color:var(--ink-soft); line-height:1.8; }
+.legal-content li{ margin-bottom:6px; }
+.legal-content a{ color:var(--teal-600); }
+.legal-content b{ color:var(--teal-800); }
+.legal-updated{ margin-top:28px; font-size:.85rem; color:var(--ink-soft); font-style:italic; }
 
 /* ---------------- MantiQ'View tool widget ---------------- */
 
