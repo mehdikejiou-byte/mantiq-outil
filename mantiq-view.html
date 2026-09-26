@@ -99,6 +99,7 @@
       <div><h4>Pistes d'amélioration</h4><ul id="tvWeaknesses" class="weak"></ul></div>
     </div>
     <p class="tv-teaser" id="tvTeaser"></p>
+    <p class="tv-disclaimer">Cette analyse est purement technique&nbsp;: l'outil n'a pas d'émotions et ne peut pas ressentir ce qu'un visuel dégage réellement. Elle ne remplacera jamais le regard d'un professionnel.</p>
     <div class="tv-cta-row">
       <a class="btn btn-fill" id="tvCtaBtn" href="contact.html">Faire le point avec un graphiste</a>
       <button class="tv-again" id="tvAgainBtn" type="button">← Analyser un autre visuel</button>
@@ -268,12 +269,13 @@ function tvBuildSystemPrompt(type){
   return `Tu es ${type.role}. On te soumet une image : ${type.subjectLower}. Ton rôle : produire une analyse honnête et constructive qui donne envie de faire appel à un professionnel pour l'améliorer, sans jamais être méprisant.
 
 Règles :
-- Utilise TOUTE l'échelle de 1 à 10, pas seulement le milieu. Sois tranché, évite le réflexe de prudence qui pousse à mettre systématiquement 5 ou 6.
-  - 1-2 : amateur, illisible ou bricolé
-  - 3-4 : notion de design présente mais nettement perfectible
-  - 5-6 : correct et fonctionnel, sans défaut majeur, mais rien qui démarque vraiment
-  - 7-8 : bien construit, cohérent, professionnel, quelques détails à affiner
-  - 9-10 : exécution quasi irréprochable, mémorable (réserve ces notes aux réalisations vraiment remarquables)
+- Utilise TOUTE l'échelle de 1 à 10, pas seulement le milieu. Ne sois pas sévère par réflexe : un rendu professionnel courant, sans défaut majeur, mérite déjà un 7, pas un 5 ou un 6.
+  - 1-3 : amateur, illisible ou bricolé
+  - 4-5 : notion de design présente mais nettement perfectible
+  - 6-7 : solide et fonctionnel, quelques points à peaufiner mais rien qui pose vraiment problème
+  - 8-9 : bien construit, cohérent, professionnel, très proche de l'idéal
+  - 10 : exécution quasi irréprochable, mémorable (à réserver aux réalisations vraiment exceptionnelles)
+- Reste cohérent : la note globale doit refléter fidèlement la moyenne des 5 critères notés, sans écart injustifié entre les deux.
 - Sois concret et technique, en t'appuyant spécifiquement sur les critères adaptés à ce type de support. N'applique jamais les critères d'un logo à ${type.subjectLower} ou inversement.
 - Le ton reste bienveillant : commence toujours par reconnaître un vrai point positif avant d'évoquer les points faibles.
 - IMPORTANT : n'affirme JAMAIS qu'un problème graphique fait perdre des clients de façon certaine. Utilise des formulations prudentes ("peut nuire à...", "risque de...", "pourrait freiner..."), jamais des certitudes causales.
@@ -380,7 +382,7 @@ tvAgainBtn.addEventListener('click', () => { tvResults.classList.remove('show');
 function tvGetLevel(score, type){
   if (score >= 8) return { emoji:"🟢", label:"IDENTITÉ SOLIDE", cls:"green",
     text: type.isIdentity ? "Votre identité fonctionne déjà bien. Quelques ajustements pourraient lui permettre d'aller encore plus loin." : `${type.subjectLower[0].toUpperCase()+type.subjectLower.slice(1)} remplit déjà bien son rôle. Quelques ajustements pourraient renforcer encore son impact.` };
-  if (score >= 5) return { emoji:"🟠", label:"POTENTIEL", cls:"orange",
+  if (score >= 4) return { emoji:"🟠", label:"POTENTIEL", cls:"orange",
     text: type.isIdentity ? "Votre identité possède une bonne base. Plusieurs pistes pourraient renforcer son impact." : `${type.subjectLower[0].toUpperCase()+type.subjectLower.slice(1)} possède une bonne base, mais plusieurs pistes pourraient renforcer son efficacité.` };
   return { emoji:"🔴", label:"FREIN", cls:"red",
     text: type.isIdentity ? "Plusieurs éléments limitent actuellement l'efficacité de votre identité. Il pourrait être intéressant de repenser certains choix." : `Plusieurs éléments limitent actuellement l'impact de ${type.subjectLower}. Il pourrait être intéressant de repenser certains choix graphiques.` };
