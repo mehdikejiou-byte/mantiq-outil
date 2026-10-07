@@ -94,7 +94,7 @@
         <p>Les données personnelles collectées via le site www.mantiq-studio.fr sont nécessaires pour&nbsp;:</p>
         <ul>
           <li>répondre aux demandes des utilisateurs (formulaire de contact, devis, etc.)&nbsp;;</li>
-          <li>réaliser des mesures de fréquentation (cookies analytiques)&nbsp;;</li>
+          <li>réaliser des mesures de fréquentation, uniquement avec votre consentement (voir la rubrique «&nbsp;Politique de cookies&nbsp;»)&nbsp;;</li>
           <li>assurer le bon fonctionnement du site.</li>
         </ul>
         <p><b>Base légale du traitement</b> &mdash; les traitements sont fondés sur&nbsp;:</p>
@@ -109,11 +109,13 @@
         <p><b>Confidentialité</b> &mdash; les données personnelles ne sont en aucun cas cédées, louées ou vendues à des tiers, sauf en cas d'obligation légale ou judiciaire.</p>
         <p><b>Lieu de stockage</b> &mdash; les données sont hébergées dans l'Union européenne, sur des serveurs sécurisés exploités par OVH.</p>
 
-        <h2>7. Politique de cookies</h2>
-        <p>La navigation sur le site www.mantiq-studio.fr est susceptible de provoquer l'installation de cookie(s) sur l'ordinateur de l'utilisateur.</p>
-        <p>Un cookie est un petit fichier texte enregistré sur le disque dur de votre terminal (ordinateur, tablette, mobile) lors de votre visite sur un site internet. Il permet de conserver des données utilisateur afin de faciliter la navigation, permettre certaines fonctionnalités ou analyser le comportement des internautes.</p>
-        <p>Les cookies non essentiels (mesure d'audience, partage sur les réseaux sociaux) sont déposés uniquement après votre accord explicite. Le refus d'installation d'un cookie peut entraîner l'impossibilité d'accéder à certains services.</p>
-        <p>Vous pouvez configurer votre navigateur pour refuser l'installation des cookies&nbsp;: les paramètres de confidentialité d'Internet Explorer, Firefox, Safari ou Chrome comportent chacun une section dédiée permettant de bloquer ou de gérer les cookies.</p>
+        <h2 id="cookies">7. Politique de cookies</h2>
+        <p>Un cookie est un petit fichier texte enregistré sur votre terminal (ordinateur, tablette, mobile) lors de la visite d'un site. Il permet de conserver des informations liées à votre navigation ou d'analyser le comportement des internautes.</p>
+        <p><b>Cookies strictement nécessaires</b> &mdash; le site n'en dépose aucun nécessitant votre accord. Votre choix concernant les cookies est mémorisé dans le stockage local de votre navigateur (clé «&nbsp;mantiq_cookie_consent&nbsp;») pendant 6 mois maximum, afin de ne pas vous redemander votre avis à chaque page.</p>
+        <p><b>Mesure d'audience (Google Analytics)</b> &mdash; avec votre consentement uniquement, le site utilise Google Analytics 4, un service de statistiques fourni par Google Ireland Limited (Gordon House, Barrow Street, Dublin 4, Irlande). Il dépose les cookies <code>_ga</code> et <code>_ga_*</code> d'une durée de 13 mois maximum, et collecte des informations de navigation (pages consultées, durée de visite, type d'appareil et de navigateur, provenance approximative) pour produire des statistiques de fréquentation. L'anonymisation de l'adresse IP est activée. Ces données ne sont pas utilisées par mantiQ pour vous identifier personnellement.</p>
+        <p>Aucun cookie de mesure d'audience n'est déposé et aucune donnée n'est transmise à Google avant que vous ayez cliqué sur «&nbsp;Tout accepter&nbsp;». Votre refus n'a aucune conséquence sur l'accès au site.</p>
+        <p><b>Gérer ou retirer votre consentement</b> &mdash; vous pouvez modifier votre choix à tout moment via le lien «&nbsp;Gérer les cookies&nbsp;» présent en bas de chaque page. Refuser après avoir accepté supprime les cookies de mesure déjà déposés. Vous pouvez également paramétrer votre navigateur pour bloquer ou supprimer les cookies (rubrique confidentialité de Chrome, Firefox, Safari ou Edge).</p>
+        <p><b>Transfert hors Union européenne</b> &mdash; Google pouvant traiter des données aux États-Unis, ces transferts sont encadrés par les mécanismes prévus par le RGPD (notamment le cadre de protection des données UE-États-Unis). Pour en savoir plus&nbsp;: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">politique de confidentialité de Google</a>.</p>
 
         <h2>8. Liens hypertextes</h2>
         <p>Le site www.mantiq-studio.fr peut contenir un certain nombre de liens hypertextes vers d'autres sites, mis en place avec l'autorisation de Mehdi Kejiou. Cependant, Mehdi Kejiou n'a pas la possibilité de vérifier le contenu des sites ainsi visités, et n'assumera en conséquence aucune responsabilité de ce fait.</p>
@@ -140,7 +142,7 @@
           <li><b>Cookie</b> : fichier qui stocke des données sur la navigation.</li>
         </ul>
 
-        <p class="legal-updated">Dernière mise à jour&nbsp;: 23 septembre 2026</p>
+        <p class="legal-updated">Dernière mise à jour&nbsp;: 7 octobre 2026</p>
       </div>
     </div>
   </section>
@@ -168,9 +170,17 @@
   </div>
   <div class="footer-bottom">
     <p class="footer-legal-ids">mantiQ &middot; Entrepreneur individuel &middot; SIRET&nbsp;: 899 225 981 00047 &middot; SIREN&nbsp;: 899 225 981 &middot; TVA intracommunautaire&nbsp;: FR91 899225981 &middot; APE/NAF&nbsp;: 7410Z &ndash; Activités spécialisées de design</p>
-    <p class="footer-copy">© 2026 mantiQ — Graphisme &amp; Conseil &middot; <a href="mentions-legales.html">Mentions légales</a> &middot; <a href="mentions-legales.html#donnees-personnelles">Politique de confidentialité</a></p>
+    <p class="footer-copy">© 2026 mantiQ — Graphisme &amp; Conseil &middot; <a href="mentions-legales.html">Mentions légales</a> &middot; <a href="mentions-legales.html#donnees-personnelles">Politique de confidentialité</a> &middot; <button type="button" class="cookie-manage" id="cookieManage">Gérer les cookies</button></p>
   </div>
 </footer>
+<div class="cookie-banner" id="cookieBanner" role="dialog" aria-live="polite" aria-labelledby="cookieTitle" hidden>
+  <h2 id="cookieTitle">Vos choix sur les cookies</h2>
+  <p>Avec votre accord, nous utilisons Google Analytics pour mesurer l'audience du site et l'améliorer. Aucun cookie de mesure n'est déposé avant votre choix, et vous pouvez le modifier à tout moment. <a href="mentions-legales.html#cookies">En savoir plus</a></p>
+  <div class="cookie-actions">
+    <button type="button" id="cookieRefuse">Tout refuser</button>
+    <button type="button" id="cookieAccept">Tout accepter</button>
+  </div>
+</div>
 <script>
 const burgerBtn = document.getElementById('burgerBtn');
 const mobileNav = document.getElementById('mobileNav');
@@ -194,6 +204,73 @@ if ('IntersectionObserver' in window) {
 } else {
   revealEls.forEach(el => el.classList.add('in'));
 }
+</script>
+<script>
+(function () {
+  var GA_ID = 'G-M7SF9D4RBV';
+  var KEY = 'mantiq_cookie_consent';
+  var MAX_AGE = 1000 * 60 * 60 * 24 * 180; // 6 mois
+  var banner = document.getElementById('cookieBanner');
+  if (!banner) return;
+
+  function readChoice() {
+    try {
+      var v = JSON.parse(localStorage.getItem(KEY));
+      if (v && (v.c === 'accepted' || v.c === 'refused') && Date.now() - v.t < MAX_AGE) return v.c;
+    } catch (e) {}
+    return null;
+  }
+  function saveChoice(c) {
+    try { localStorage.setItem(KEY, JSON.stringify({ c: c, t: Date.now() })); } catch (e) {}
+  }
+  function gaConfigured() { return GA_ID && GA_ID.indexOf('XXXX') === -1; }
+
+  function loadGA() {
+    if (!gaConfigured() || window.__gaLoaded) return;
+    window.__gaLoaded = true;
+    window['ga-disable-' + GA_ID] = false;
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(GA_ID);
+    document.head.appendChild(s);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    window.gtag('config', GA_ID, { anonymize_ip: true, cookie_expires: 33696000 }); // cookies : 13 mois max
+  }
+
+  function removeGA() {
+    if (gaConfigured()) window['ga-disable-' + GA_ID] = true;
+    var host = location.hostname.split('.');
+    var domains = ['', location.hostname];
+    for (var i = 1; i < host.length - 1; i++) domains.push('.' + host.slice(i).join('.'));
+    domains.push('.' + location.hostname);
+    document.cookie.split(';').forEach(function (c) {
+      var name = c.split('=')[0].trim();
+      if (name === '_ga' || name.indexOf('_ga_') === 0 || name === '_gid' || name.indexOf('_gat') === 0) {
+        domains.forEach(function (d) {
+          document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/' + (d ? '; domain=' + d : '');
+        });
+      }
+    });
+  }
+
+  function show() { banner.hidden = false; }
+  function hide() { banner.hidden = true; }
+
+  document.getElementById('cookieAccept').addEventListener('click', function () {
+    saveChoice('accepted'); hide(); loadGA();
+  });
+  document.getElementById('cookieRefuse').addEventListener('click', function () {
+    saveChoice('refused'); hide(); removeGA();
+  });
+  var manage = document.getElementById('cookieManage');
+  if (manage) manage.addEventListener('click', show);
+
+  var choice = readChoice();
+  if (choice === 'accepted') loadGA();
+  else if (choice === null) show();
+})();
 </script>
 
 </body>

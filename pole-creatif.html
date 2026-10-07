@@ -161,9 +161,17 @@
   </div>
   <div class="footer-bottom">
     <p class="footer-legal-ids">mantiQ &middot; Entrepreneur individuel &middot; SIRET&nbsp;: 899 225 981 00047 &middot; SIREN&nbsp;: 899 225 981 &middot; TVA intracommunautaire&nbsp;: FR91 899225981 &middot; APE/NAF&nbsp;: 7410Z &ndash; Activités spécialisées de design</p>
-    <p class="footer-copy">© 2026 mantiQ — Graphisme &amp; Conseil &middot; <a href="mentions-legales.html">Mentions légales</a> &middot; <a href="mentions-legales.html#donnees-personnelles">Politique de confidentialité</a></p>
+    <p class="footer-copy">© 2026 mantiQ — Graphisme &amp; Conseil &middot; <a href="mentions-legales.html">Mentions légales</a> &middot; <a href="mentions-legales.html#donnees-personnelles">Politique de confidentialité</a> &middot; <button type="button" class="cookie-manage" id="cookieManage">Gérer les cookies</button></p>
   </div>
 </footer>
+<div class="cookie-banner" id="cookieBanner" role="dialog" aria-live="polite" aria-labelledby="cookieTitle" hidden>
+  <h2 id="cookieTitle">Vos choix sur les cookies</h2>
+  <p>Avec votre accord, nous utilisons Google Analytics pour mesurer l'audience du site et l'améliorer. Aucun cookie de mesure n'est déposé avant votre choix, et vous pouvez le modifier à tout moment. <a href="mentions-legales.html#cookies">En savoir plus</a></p>
+  <div class="cookie-actions">
+    <button type="button" id="cookieRefuse">Tout refuser</button>
+    <button type="button" id="cookieAccept">Tout accepter</button>
+  </div>
+</div>
 <script>
 const burgerBtn = document.getElementById('burgerBtn');
 const mobileNav = document.getElementById('mobileNav');
@@ -187,6 +195,73 @@ if ('IntersectionObserver' in window) {
 } else {
   revealEls.forEach(el => el.classList.add('in'));
 }
+</script>
+<script>
+(function () {
+  var GA_ID = 'G-M7SF9D4RBV';
+  var KEY = 'mantiq_cookie_consent';
+  var MAX_AGE = 1000 * 60 * 60 * 24 * 180; // 6 mois
+  var banner = document.getElementById('cookieBanner');
+  if (!banner) return;
+
+  function readChoice() {
+    try {
+      var v = JSON.parse(localStorage.getItem(KEY));
+      if (v && (v.c === 'accepted' || v.c === 'refused') && Date.now() - v.t < MAX_AGE) return v.c;
+    } catch (e) {}
+    return null;
+  }
+  function saveChoice(c) {
+    try { localStorage.setItem(KEY, JSON.stringify({ c: c, t: Date.now() })); } catch (e) {}
+  }
+  function gaConfigured() { return GA_ID && GA_ID.indexOf('XXXX') === -1; }
+
+  function loadGA() {
+    if (!gaConfigured() || window.__gaLoaded) return;
+    window.__gaLoaded = true;
+    window['ga-disable-' + GA_ID] = false;
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(GA_ID);
+    document.head.appendChild(s);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    window.gtag('config', GA_ID, { anonymize_ip: true, cookie_expires: 33696000 }); // cookies : 13 mois max
+  }
+
+  function removeGA() {
+    if (gaConfigured()) window['ga-disable-' + GA_ID] = true;
+    var host = location.hostname.split('.');
+    var domains = ['', location.hostname];
+    for (var i = 1; i < host.length - 1; i++) domains.push('.' + host.slice(i).join('.'));
+    domains.push('.' + location.hostname);
+    document.cookie.split(';').forEach(function (c) {
+      var name = c.split('=')[0].trim();
+      if (name === '_ga' || name.indexOf('_ga_') === 0 || name === '_gid' || name.indexOf('_gat') === 0) {
+        domains.forEach(function (d) {
+          document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/' + (d ? '; domain=' + d : '');
+        });
+      }
+    });
+  }
+
+  function show() { banner.hidden = false; }
+  function hide() { banner.hidden = true; }
+
+  document.getElementById('cookieAccept').addEventListener('click', function () {
+    saveChoice('accepted'); hide(); loadGA();
+  });
+  document.getElementById('cookieRefuse').addEventListener('click', function () {
+    saveChoice('refused'); hide(); removeGA();
+  });
+  var manage = document.getElementById('cookieManage');
+  if (manage) manage.addEventListener('click', show);
+
+  var choice = readChoice();
+  if (choice === 'accepted') loadGA();
+  else if (choice === null) show();
+})();
 </script>
 
 </body>

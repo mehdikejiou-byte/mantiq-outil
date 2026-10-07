@@ -576,3 +576,24 @@ section{padding-block: clamp(36px, 4.5vw, 64px);}
 .tv-teaser{ margin-top:20px; font-style:italic; color:var(--teal-600); font-size:.94rem; }
 .tv-cta-row{ margin-top:22px; display:flex; gap:14px; flex-wrap:wrap; }
 .tv-again{ background:none; border:none; color:var(--teal-500); font-weight:700; font-size:.88rem; cursor:pointer; padding:10px 0; }
+
+/* ---------------- cookie banner ---------------- */
+.cookie-manage{ background:none; border:0; padding:0; font:inherit; color:inherit; cursor:pointer; text-decoration:none; }
+.cookie-manage:hover{ color:var(--sage-300); }
+.cookie-banner{
+  position:fixed; left:20px; bottom:20px; z-index:1000; width:min(440px, calc(100vw - 40px));
+  background:var(--white); color:var(--teal-900); border-radius:var(--radius-md);
+  box-shadow:0 24px 60px -18px rgba(1,59,64,.45); border:1px solid var(--teal-100); padding:20px 22px;
+}
+.cookie-banner[hidden]{ display:none; }
+.cookie-banner h2{ font-size:1rem; font-weight:800; color:var(--teal-800); margin:0 0 8px; }
+.cookie-banner p{ font-size:.86rem; line-height:1.5; margin:0 0 14px; color:var(--teal-700); }
+.cookie-banner p a{ color:var(--teal-600); text-decoration:underline; }
+.cookie-actions{ display:flex; gap:10px; }
+.cookie-actions button{
+  flex:1; font-family:"Manrope", system-ui, sans-serif; font-weight:700; font-size:.9rem; padding:11px 14px; border-radius:999px;
+  cursor:pointer; border:2px solid var(--teal-700); background:var(--white); color:var(--teal-800);
+}
+.cookie-actions button:hover{ background:var(--cream-deep); }
+.cookie-actions button:focus-visible{ outline:3px solid var(--teal-500); outline-offset:2px; }
+@media (max-width:520px){ .cookie-banner{ left:12px; right:12px; bottom:12px; width:auto; } }
