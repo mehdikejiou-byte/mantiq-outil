@@ -20,6 +20,7 @@
       <a href="index.html">Accueil</a>
 <a href="pole-creatif.html">Pôle Creative</a>
 <a href="pole-conseil.html">Pôle Business</a>
+<a href="forfaits.html">Nos forfaits</a>
 <a href="mantiq-view.html">MantiQ'View</a>
 <a href="realisations.html">Réalisations</a>
 <a href="a-propos.html">À propos</a>
@@ -36,6 +37,7 @@
     <a href="index.html">Accueil</a>
 <a href="pole-creatif.html">Pôle Creative</a>
 <a href="pole-conseil.html">Pôle Business</a>
+<a href="forfaits.html">Nos forfaits</a>
 <a href="mantiq-view.html">MantiQ'View</a>
 <a href="realisations.html">Réalisations</a>
 <a href="a-propos.html">À propos</a>
@@ -100,6 +102,7 @@
               <option>Communication &amp; supports imprimés</option>
               <option>Stratégie &amp; conseil business</option>
               <option>Diagnostic MantiQ'View</option>
+              <option>Demande de devis</option>
               <option>Autre demande</option>
             </select>
           </div>
@@ -135,6 +138,7 @@
     <nav class="footer-nav">
       <a href="pole-creatif.html">Pôle Creative</a>
       <a href="pole-conseil.html">Pôle Business</a>
+      <a href="forfaits.html">Nos forfaits</a>
       <a href="mantiq-view.html">MantiQ'View</a>
       <a href="realisations.html">Réalisations</a>
       <a href="a-propos.html">À propos</a>
@@ -273,6 +277,28 @@ if (contactForm) {
       .finally(() => { submitBtn.disabled = false; });
   });
 }
+</script><script>
+(function () {
+  var form = document.getElementById('contactForm');
+  if (!form) return;
+  var p = new URLSearchParams(location.search);
+  function clean(s) { return String(s || '').replace(/[<>]/g, '').trim().slice(0, 140); }
+  var forfait = clean(p.get('forfait')), profil = clean(p.get('profil')), prix = clean(p.get('prix'));
+  var items = p.getAll('prestation').map(clean).filter(Boolean).slice(0, 15);
+  var msg = '';
+  if (forfait) {
+    msg = 'Bonjour,\n\nJe souhaite recevoir un devis pour « ' + forfait + ' »'
+        + (profil ? ' (' + profil + ')' : '') + (prix ? ' — ' + prix : '') + '.\n\n';
+  } else if (items.length) {
+    msg = 'Bonjour,\n\nJe souhaite recevoir un devis pour les prestations suivantes :\n'
+        + items.map(function (i) { return '- ' + i; }).join('\n') + '\n\n';
+  }
+  if (!msg) return;
+  var ta = document.getElementById('cMessage');
+  if (ta && !ta.value) ta.value = msg + 'À propos de mon projet : ';
+  var sel = document.getElementById('cSujet');
+  if (sel) sel.value = 'Demande de devis';
+})();
 </script>
 </body>
 </html>

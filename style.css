@@ -184,7 +184,7 @@ section{padding-block: clamp(36px, 4.5vw, 64px);}
 .burger span{ width:24px; height:2.5px; background:var(--teal-800); border-radius:2px; }
 .mobile-nav{ display:none; }
 .mobile-nav .btn{ border-radius:var(--radius-md); justify-content:center; padding:13px 16px; margin-top:8px; }
-@media (max-width:980px){
+@media (max-width:1060px){
   .main-nav{ display:none; }
   .header-actions .btn.on-header{ display:none; }
   .burger{ display:flex; }
@@ -597,3 +597,243 @@ section{padding-block: clamp(36px, 4.5vw, 64px);}
 .cookie-actions button:hover{ background:var(--cream-deep); }
 .cookie-actions button:focus-visible{ outline:3px solid var(--teal-500); outline-offset:2px; }
 @media (max-width:520px){ .cookie-banner{ left:12px; right:12px; bottom:12px; width:auto; } }
+
+/* ---------------- forfaits ---------------- */
+.plans-hook{ display:flex; flex-wrap:wrap; align-items:center; gap:14px 20px; margin-top:20px; }
+.plans-hook .pill-badge{ font-size:.82rem; padding:9px 20px; }
+.plan-tabs{ margin-top:28px; }
+.plan-panel{ animation:planFade .35s ease; }
+.plan-panel[hidden]{ display:none; }
+@keyframes planFade{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+@media (prefers-reduced-motion:reduce){ .plan-panel{ animation:none; } }
+.plan-panel-title{ font-size:clamp(1.4rem,2vw,1.8rem); color:var(--teal-800); font-weight:800; }
+.plans-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:26px; margin-top:44px; align-items:stretch; }
+@media (max-width:980px){ .plans-grid{ grid-template-columns:1fr; max-width:520px; margin-inline:auto; gap:38px; } }
+
+/* carte forfait : même esprit que les cartes des pôles (fond teinté, nom dans une pastille) */
+.plan-card{
+  position:relative; display:flex; flex-direction:column; background:var(--cream-deep); border-radius:var(--radius-md);
+  box-shadow:var(--shadow-card); padding:30px 26px 26px; border:2px solid transparent;
+  transition:transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+}
+.plan-card:hover{ transform:translateY(-5px); box-shadow:var(--shadow-soft); }
+.plan-name{ margin:0; }
+.plan-name .pill-badge{ font-family:"Manrope", system-ui, sans-serif; font-size:.95rem; padding:9px 24px; }
+.plan-price{ margin-top:22px; display:flex; flex-direction:column; line-height:1.1; }
+.plan-price small{ font-size:.72rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--teal-600); }
+.plan-price strong{ font-size:2.5rem; font-weight:800; color:var(--teal-800); margin-top:4px; letter-spacing:-.02em; }
+.plan-price strong.is-quote{ font-size:1.8rem; padding-block:.2em; }
+.plan-note{ margin-top:8px; min-height:1.3em; font-size:.84rem; font-weight:700; color:var(--teal-600); }
+.plan-list{
+  margin:14px 0 26px; padding-top:18px; border-top:1px solid rgba(1,59,64,.14);
+  display:grid; gap:11px; flex:1; align-content:start;
+}
+.plan-list li{ position:relative; padding-left:24px; font-size:.93rem; line-height:1.4; }
+.plan-list li.in{ color:var(--teal-800); font-weight:700; }
+.plan-list li.in::before{ content:"-"; position:absolute; left:3px; top:0; font-weight:800; font-size:1.2em; line-height:1.15; color:var(--teal-500); }
+.plan-list li.out{ color:rgba(5,70,75,.42); font-weight:500; text-decoration:line-through; text-decoration-color:rgba(5,70,75,.3); }
+.plan-list li.out::before{ content:"\00d7"; position:absolute; left:2px; top:0; font-weight:600; font-size:1.15em; line-height:1.15; color:rgba(5,70,75,.35); }
+.plan-sr{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+.plan-card .btn{ justify-content:center; padding-block:14px; }
+
+/* carte mise en avant : bordure dégradée, surélevée, pastille pleine */
+.plan-card.featured{
+  border-color:transparent; padding-block:38px 28px; transform:translateY(-14px);
+  background-image:linear-gradient(var(--cream-deep), var(--cream-deep)), var(--grad-cta);
+  background-origin:border-box; background-clip:padding-box, border-box;
+  box-shadow:0 30px 56px -26px rgba(1,59,64,.5);
+}
+.plan-card.featured:hover{ transform:translateY(-20px); }
+.plan-card.featured .pill-badge{
+  color:var(--white); background-image:none; background:var(--grad-cta); border:none; padding:11px 28px; font-size:1.02rem;
+  box-shadow:var(--shadow-card);
+}
+.plan-card.featured .plan-price strong{ font-size:2.9rem; }
+.plan-card.featured .plan-price strong.is-quote{ font-size:2rem; }
+.plan-badge{
+  position:absolute; top:-16px; left:50%; transform:translateX(-50%); white-space:nowrap;
+  background:var(--lime-500); color:var(--teal-900); font-weight:800; font-size:.74rem; letter-spacing:.08em;
+  text-transform:uppercase; padding:8px 20px; border-radius:999px; box-shadow:0 10px 22px -10px rgba(1,59,64,.55);
+}
+@media (max-width:980px){
+  .plan-card.featured, .plan-card.featured:hover{ transform:none; }
+}
+
+/* ---- relief & couleur (v4) : contour dégradé identique sur toutes les cartes, sans jaune ---- */
+.plan-panel-title{ font-size:clamp(1.9rem,3.2vw,2.6rem); letter-spacing:-.02em; }
+.plan-panel-title::after{ content:""; display:block; width:84px; height:6px; border-radius:4px; margin-top:12px; background:var(--grad-accent); }
+.plan-card{
+  border:2px solid transparent;
+  background-image:linear-gradient(175deg, #cdeee9 0%, var(--cream-deep) 50%, #eef8f6 100%), linear-gradient(120deg, var(--teal-800), var(--sage-300));
+  background-origin:border-box; background-clip:padding-box, border-box;
+}
+.plan-name{ text-align:center; margin:-4px 0 0; }
+.plan-name .pill-badge{
+  width:100%; justify-content:center; font-family:"Manrope", system-ui, sans-serif; font-size:1.3rem; padding:13px 20px; letter-spacing:.07em;
+  color:var(--white); background-image:none; background:linear-gradient(120deg, var(--teal-800), var(--teal-500)); border:none;
+  box-shadow:0 12px 24px -12px rgba(1,59,64,.65);
+}
+.plan-price{ text-align:center; margin-top:22px; }
+.plan-price strong{
+  font-size:2.9rem; background:linear-gradient(120deg, var(--teal-800) 20%, var(--teal-500) 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent;
+}
+.plan-price strong.is-quote{ font-size:2rem; }
+.plan-note{ text-align:center; }
+.plan-list li.in, .plan-list li.out{ padding:9px 14px 9px 34px; border-radius:12px; }
+.plan-list li.in{ background:rgba(58,188,176,.15); }
+.plan-list li.in::before{ color:var(--teal-500); font-size:1.5em; }
+.plan-list li.in::before, .plan-list li.out::before{ left:14px; top:50%; transform:translateY(-52%); }
+.plan-list{ gap:8px; }
+@supports not (background-clip:text){ .plan-price strong{ color:var(--teal-800); -webkit-text-fill-color:initial; } }
+
+/* carte du milieu : même contour, mais plus grande, plus ombrée, teinte turquoise plus soutenue */
+.plan-card.featured{
+  padding-block:38px 28px;
+  background-image:linear-gradient(175deg, #b5e6df 0%, #d6f1ec 55%, #e6f6f3 100%), linear-gradient(120deg, var(--teal-800), var(--sage-300));
+  box-shadow:0 34px 60px -26px rgba(1,59,64,.55);
+}
+.plan-card.featured .plan-name .pill-badge{
+  font-size:1.5rem; padding:15px 20px; background:linear-gradient(120deg, var(--teal-900), var(--teal-700) 55%, var(--teal-500));
+}
+.plan-card.featured .plan-price strong{ font-size:3.3rem; background:linear-gradient(120deg, var(--teal-900) 10%, var(--teal-600) 100%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+.plan-card.featured .plan-list li.in{ background:rgba(14,121,121,.17); }
+.plan-card.featured .plan-list li.in::before{ color:var(--teal-800); }
+.plan-card.featured .btn-fill{ background:linear-gradient(120deg, var(--teal-900), var(--teal-700) 55%, var(--teal-500)); }
+.plan-badge{ background:var(--teal-800); color:var(--white); }
+
+/* ---- carte « Le plus choisi » (v5) : fond vert-bleu profond de la charte, texte clair ---- */
+.plan-card.featured{
+  background-image:linear-gradient(165deg, var(--teal-900) 0%, var(--teal-800) 55%, var(--teal-600) 100%), linear-gradient(120deg, var(--teal-800), var(--sage-300));
+  padding-block:44px 32px; transform:translateY(-20px) scale(1.03);
+  box-shadow:0 40px 70px -28px rgba(1,59,64,.7), 0 0 0 6px rgba(58,188,176,.18);
+}
+.plan-card.featured:hover{ transform:translateY(-26px) scale(1.03); }
+.plan-card.featured .plan-name .pill-badge{
+  background:linear-gradient(120deg, var(--teal-500), var(--sage-300)); color:var(--teal-900); box-shadow:0 14px 26px -12px rgba(0,0,0,.5);
+}
+.plan-card.featured .plan-price small{ color:var(--sage-300); }
+.plan-card.featured .plan-price strong{
+  background:none; color:var(--white); -webkit-text-fill-color:var(--white); font-size:3.5rem;
+}
+.plan-card.featured .plan-price strong.is-quote{ font-size:2.2rem; }
+.plan-card.featured .plan-note{ color:var(--sage-300); }
+.plan-card.featured .plan-list{ border-top-color:rgba(255,255,255,.22); }
+.plan-card.featured .plan-list li.in{ background:rgba(255,255,255,.12); color:var(--white); }
+.plan-card.featured .plan-list li.in::before{ color:var(--teal-500); }
+.plan-card.featured .plan-list li.out{ color:rgba(241,249,242,.45); text-decoration-color:rgba(241,249,242,.35); }
+.plan-card.featured .plan-list li.out::before{ color:rgba(241,249,242,.4); }
+.plan-card.featured .btn-fill{ background:var(--white); color:var(--teal-800); box-shadow:0 14px 26px -12px rgba(0,0,0,.5); }
+.plan-card.featured .btn-fill:hover{ filter:none; background:var(--cream); }
+.plan-card.featured .plan-badge{
+  top:-18px; background:var(--white); color:var(--teal-800); font-size:.8rem; padding:9px 24px;
+  box-shadow:0 12px 24px -10px rgba(1,59,64,.6); border:2px solid var(--teal-500);
+}
+@media (max-width:980px){
+  .plan-card.featured, .plan-card.featured:hover{ transform:none; }
+}
+
+/* ---- carte « Le plus choisi » (v6) : dégradé de la charte, éléments adaptés pour rester lisibles ---- */
+.plan-card.featured{
+  background-image:linear-gradient(155deg, #01474d 0%, #0e7979 58%, #a9c92a 118%), linear-gradient(120deg, var(--teal-800), var(--sage-300));
+}
+.plan-card.featured .plan-name .pill-badge{
+  background:var(--white); color:var(--teal-800); box-shadow:0 14px 26px -12px rgba(1,59,64,.6);
+}
+.plan-card.featured .plan-price small{ color:rgba(255,255,255,.9); }
+.plan-card.featured .plan-note{ color:rgba(255,255,255,.92); }
+.plan-card.featured .plan-list{ border-top-color:rgba(255,255,255,.3); }
+.plan-card.featured .plan-list li.in{ background:rgba(1,59,64,.32); color:var(--white); }
+.plan-card.featured .plan-list li.in::before{ color:var(--sage-300); }
+.plan-card.featured .plan-list li.out{ background:rgba(1,59,64,.14); color:rgba(255,255,255,.82); text-decoration-color:rgba(255,255,255,.6); }
+.plan-card.featured .plan-list li.out::before{ color:rgba(255,255,255,.65); }
+.plan-card.featured .btn-fill{ color:var(--teal-800); }
+
+/* ---- accroche courte sous le prix ---- */
+.plan-tagline{ margin-top:12px; text-align:center; font-size:.92rem; line-height:1.4; font-weight:600; color:var(--teal-700); min-height:2.8em; }
+.plan-note{ margin-top:4px; }
+.plan-card.featured .plan-tagline{ color:rgba(255,255,255,.95); }
+
+/* ---- passerelle vers « À la carte » & bouton forfaits de l'accueil ---- */
+.plan-tabs{ scroll-margin-top:90px; }
+.plan-carte-cta{ margin-top:56px; display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:14px 22px; text-align:center; }
+.plan-carte-cta p{ font-weight:700; color:var(--teal-800); font-size:1rem; }
+.plan-carte-cta .btn{ padding:12px 28px; }
+.poles-cta{ margin-top:34px; text-align:center; }
+.poles-cta .btn{ padding:16px 38px; font-size:1.02rem; }
+.poles-cta p{ margin-top:12px; font-size:.9rem; font-weight:600; color:var(--teal-700); }
+
+/* à la carte */
+.carte-intro{ margin-top:12px; max-width:62ch; font-size:1rem; color:var(--ink-soft); }
+.carte-layout{ display:grid; grid-template-columns:1.5fr 1fr; gap:28px; margin-top:28px; align-items:start; }
+@media (max-width:900px){ .carte-layout{ grid-template-columns:1fr; } }
+.carte-list{ display:grid; gap:10px; }
+.carte-item{
+  display:flex; align-items:center; gap:14px; background:var(--white); border:2px solid var(--teal-100);
+  border-radius:var(--radius-md); padding:14px 18px; cursor:pointer; transition:border-color .2s ease, box-shadow .2s ease;
+}
+.carte-item:hover{ border-color:var(--teal-500); }
+.carte-item.checked{ border-color:var(--teal-600); box-shadow:var(--shadow-card); }
+.carte-item input{ position:absolute; opacity:0; width:1px; height:1px; }
+.carte-check{
+  flex:none; width:22px; height:22px; border-radius:7px; border:2px solid var(--teal-500); background:var(--white);
+  display:inline-flex; align-items:center; justify-content:center; transition:background .2s ease, border-color .2s ease;
+}
+.carte-item.checked .carte-check{
+  border-color:var(--teal-800);
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center/14px no-repeat, var(--teal-800);
+}
+.carte-item input:focus-visible + .carte-check{ outline:3px solid var(--teal-500); outline-offset:2px; }
+.carte-label{ flex:1; display:flex; flex-wrap:wrap; align-items:center; gap:4px 10px; }
+.carte-label b{ color:var(--teal-800); font-size:.95rem; }
+.carte-note-chip{
+  font-style:normal; font-weight:800; font-size:.68rem; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--white); background:var(--grad-cta); border-radius:999px; padding:3px 10px;
+}
+.carte-price{ flex:none; font-weight:800; font-size:.86rem; color:var(--teal-600); text-align:right; }
+@media (max-width:520px){
+  .carte-item{ flex-wrap:wrap; }
+  .carte-price{ width:100%; text-align:left; padding-left:36px; }
+}
+.carte-recap{
+  background:var(--white); border-radius:var(--radius-md); box-shadow:var(--shadow-card); padding:24px 24px 26px;
+  position:sticky; top:96px;
+}
+@media (max-width:900px){ .carte-recap{ position:static; } }
+.carte-recap h3{ font-size:1.1rem; font-weight:800; color:var(--teal-800); }
+.carte-empty{ margin-top:10px; font-size:.9rem; color:var(--ink-soft); }
+.carte-empty[hidden]{ display:none; }
+.carte-recap-list{ margin-top:12px; display:grid; gap:8px; }
+.carte-recap-list li{
+  display:flex; justify-content:space-between; gap:12px; padding-bottom:8px; border-bottom:1px solid var(--teal-100);
+  font-size:.9rem; color:var(--teal-800); font-weight:700;
+}
+.carte-recap-list em{ font-style:normal; color:var(--teal-600); font-weight:700; font-size:.82rem; text-align:right; }
+.carte-recap .btn{ margin-top:18px; width:100%; justify-content:center; }
+.btn[aria-disabled="true"]{ opacity:.55; cursor:not-allowed; transform:none; box-shadow:none; }
+.carte-footnote{ margin-top:22px; font-weight:700; color:var(--teal-700); font-size:.92rem; }
+
+/* options mensuelles */
+.options-band{
+  position:relative; overflow:hidden; border-radius:var(--radius-md); background:var(--grad-cta);
+  color:var(--text-on-dark); padding:clamp(24px,3vw,36px) clamp(24px,4vw,44px);
+}
+.options-mark{ position:absolute; right:-3%; top:50%; transform:translateY(-50%); width:200px; opacity:.12; pointer-events:none; }
+.options-head, .options-grid{ position:relative; z-index:1; }
+.options-head .eyebrow-tag{ color:var(--lime-500); }
+.options-head h2{ font-size:clamp(1.15rem,1.9vw,1.5rem); color:var(--white); font-weight:800; }
+.options-grid{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:22px; }
+@media (max-width:760px){ .options-grid{ grid-template-columns:1fr; } }
+.option-item{ background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.18); border-radius:var(--radius-md); padding:20px 22px; }
+.option-item h3{ font-size:1.1rem; font-weight:800; color:var(--white); }
+.option-price{ margin-top:6px; font-size:.9rem; color:rgba(241,249,242,.85); }
+.option-price small{ font-size:.74rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; }
+.option-price strong{ font-size:1.5rem; color:var(--lime-500); font-weight:800; }
+.option-text{ margin-top:8px; font-size:.9rem; color:rgba(241,249,242,.88); }
+.link-arrow.on-dark{ color:var(--white); margin-top:12px; font-size:.88rem; }
+.link-arrow.on-dark:hover{ color:var(--lime-500); }
+
+/* menu : 8 entrées, on resserre avant de basculer en burger */
+@media (min-width:1061px){ .main-nav{ gap:22px; flex-wrap:nowrap; } .main-nav a{ font-size:.9rem; } }
+@media (max-width:1280px){ .main-nav{ gap:17px; } .header-actions{ gap:12px; } .header-actions .btn.on-header{ padding:11px 18px !important; } .site-header .wrap{ gap:14px; } }
+@media (max-width:1160px){ .main-nav{ gap:13px; } .main-nav a{ font-size:.86rem; } .brand img{ height:28px; } }
