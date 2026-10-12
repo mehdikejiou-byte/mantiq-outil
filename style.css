@@ -948,3 +948,33 @@ section{padding-block: clamp(36px, 4.5vw, 64px);}
 /* ===== Grands écrans : le site occupe toute la largeur, texte légèrement agrandi ===== */
 @media (min-width:1700px){ html{ font-size:106.25%; } }
 @media (min-width:2100px){ html{ font-size:112.5%; } }
+
+/* ===== Grand Q d'accueil : mots qui défilent ===== */
+.sr-only{ position:absolute!important; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
+.home-hero-visual .hero-q{ position:relative; width:min(clamp(280px,27vw,480px),82vw); container-type:inline-size; animation:floaty 11s ease-in-out infinite; }
+.home-hero-visual .hero-q .mark-img{ width:100%; animation:none; }
+.hero-q-words{ position:absolute; left:8%; right:8%; top:40%; transform:translateY(-50%); display:flex; flex-direction:column; align-items:center; text-align:center; color:#fff; pointer-events:none;
+  text-shadow:0 1px 2px rgba(0,55,52,.45), 0 4px 18px rgba(0,60,58,.4); }
+.hq-label{ font-weight:700; font-size:4.4cqw; letter-spacing:.12em; text-transform:uppercase; opacity:.95; margin-bottom:3cqw; }
+.hq-slot{ position:relative; display:block; width:100%; height:23cqw; }
+.hq-word{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:"Manrope",system-ui,sans-serif; font-weight:800; font-size:11cqw; line-height:1.04; text-wrap:balance;
+  opacity:0; transform:translateY(45%); animation:hqWord 19.8s ease-in-out infinite; animation-delay:calc(var(--i) * 2.2s + .6s); }
+@keyframes hqWord{ 0%{ opacity:0; transform:translateY(45%); } 1.6%{ opacity:1; transform:none; } 9.5%{ opacity:1; transform:none; } 11.1%{ opacity:0; transform:translateY(-45%); } 100%{ opacity:0; transform:translateY(-45%); } }
+@media (prefers-reduced-motion:reduce){
+  .home-hero-visual .hero-q{ animation:none; }
+  .hq-word{ animation:none; }
+  .hq-word:first-child{ opacity:1; transform:none; }
+}
+.hq-word{ font-size:13.5cqw; }
+.hq-slot{ height:30cqw; }
+.hq-label{ font-size:4.6cqw; }
+/* Q d'accueil recoloré : fond teal profond pour que le texte blanc s'y fonde */
+.hero-q-words{ top:38%; text-shadow:0 1px 10px rgba(0,50,52,.35); }
+.hq-label{ color:#d9f27c; opacity:1; }
+
+.home-hero{ overflow:hidden; }
+.home-hero-visual .hero-q{ --Q:min(clamp(240px,22vw,400px),72vw); width:var(--Q); }
+/* Le Q flotte sans pivoter : le texte reste droit */
+@keyframes floatY{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-12px); } }
+.home-hero-visual .hero-q{ animation:floatY 11s ease-in-out infinite; }
+@media (prefers-reduced-motion:reduce){ .home-hero-visual .hero-q{ animation:none; } }
