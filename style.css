@@ -973,7 +973,7 @@ section{padding-block: clamp(36px, 4.5vw, 64px);}
 .hq-label{ color:#d9f27c; opacity:1; }
 
 .home-hero{ overflow:hidden; }
-.home-hero-visual .hero-q{ --Q:min(clamp(240px,22vw,400px),72vw); width:var(--Q); }
+.home-hero-visual .hero-q{ --Q:min(clamp(240px,19vw,340px),72vw); width:var(--Q); }
 /* Le Q flotte sans pivoter : le texte reste droit */
 @keyframes floatY{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-12px); } }
 .home-hero-visual .hero-q{ animation:floatY 11s ease-in-out infinite; }
