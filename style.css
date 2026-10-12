@@ -876,3 +876,14 @@ section{padding-block: clamp(36px, 4.5vw, 64px);}
   -webkit-mask-composite:xor; mask-composite:exclude;
 }
 .poles-cta .btn:hover{ background:rgba(58,188,176,.12); filter:none; }
+
+
+/* ---- « / mois », rassurance sous les boutons, estimation à la carte ---- */
+.plan-price .per{ font-size:1rem; font-weight:700; letter-spacing:0; }
+.plan-reassure{ margin-top:10px; text-align:center; font-size:.78rem; font-weight:600; color:var(--teal-600); }
+.plan-card.featured .plan-reassure{ color:rgba(255,255,255,.9); }
+.carte-recap .plan-reassure{ margin-top:10px; }
+.carte-estimate{ margin:14px 0 12px; padding:12px 14px; border-radius:12px; background:var(--cream-deep); font-weight:700; color:var(--teal-800); font-size:.95rem; }
+.carte-estimate[hidden]{ display:none; }
+.carte-estimate strong{ font-size:1.15rem; color:var(--teal-800); }
+.carte-estimate small{ display:block; margin-top:4px; font-weight:600; font-size:.74rem; color:var(--teal-600); }
