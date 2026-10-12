@@ -32,7 +32,7 @@
   --shadow-card: 0 14px 34px -18px rgba(1,59,64,.28);
   --radius-lg: 28px;
   --radius-md: 18px;
-  --gutter: 24px;
+  --gutter: clamp(24px, 3vw, 80px);
 }
 *{box-sizing:border-box;}
 body{
@@ -45,7 +45,7 @@ h1,h2,h3{font-family:"Manrope",system-ui,sans-serif; margin:0; text-wrap:balance
 p{margin:0; line-height:1.65;}
 ul{margin:0; padding:0; list-style:none;}
 button{font-family:inherit;}
-.wrap{max-width:1240px; margin-inline:auto; padding-inline:max(var(--gutter), env(safe-area-inset-left,0px)) max(var(--gutter), env(safe-area-inset-right,0px));}
+.wrap{max-width:1840px; margin-inline:auto; padding-inline:max(var(--gutter), env(safe-area-inset-left,0px)) max(var(--gutter), env(safe-area-inset-right,0px));}
 section{padding-block: clamp(36px, 4.5vw, 64px);}
 
 /* motif de fond discret + rappel du logo */
@@ -944,3 +944,7 @@ section{padding-block: clamp(36px, 4.5vw, 64px);}
 
 .kf-band.kf-n3{ grid-template-columns:repeat(3,1fr); }
 @media (max-width:620px){ .kf-band.kf-n3{ grid-template-columns:1fr; } .kf-band.kf-n3 .kf-item{ border-left:0; border-top:1px solid rgba(0,103,98,.15); } .kf-band.kf-n3 .kf-item:first-child{ border-top:0; } }
+
+/* ===== Grands écrans : le site occupe toute la largeur, texte légèrement agrandi ===== */
+@media (min-width:1700px){ html{ font-size:106.25%; } }
+@media (min-width:2100px){ html{ font-size:112.5%; } }
