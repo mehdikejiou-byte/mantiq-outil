@@ -1033,3 +1033,14 @@ section{padding-block: clamp(36px, 4.5vw, 64px);}
 }
 /* Fond du hero = fond de la vidéo, pour un fondu sans raccord visible */
 .home-hero.on-mint{ background:#f0f6f4; }
+
+/* Vidéo accueil : bouton son (affiché si le navigateur bloque le son à l'ouverture) */
+.hv-sound{ position:absolute; right:3%; bottom:8%; z-index:2; display:inline-flex; align-items:center; gap:.45rem; padding:.5rem .9rem; border-radius:999px; border:1px solid rgba(0,103,98,.16);
+  background:rgba(255,255,255,.92); color:var(--teal-800); font:inherit; font-weight:800; font-size:.8rem; cursor:pointer; box-shadow:0 6px 18px rgba(1,71,77,.16); transition:transform .2s ease, background .2s ease; }
+.hv-sound[hidden]{ display:none; }
+.hv-sound:hover,.hv-sound:focus-visible{ transform:translateY(-2px); background:#fff; }
+.hv-sound svg{ width:1.05rem; height:1.05rem; }
+.hv-sound .ic-on{ display:none; }
+.hv-sound.is-on .ic-on{ display:block; } .hv-sound.is-on .ic-off{ display:none; }
+.hero-video.is-ended .hv-sound{ display:none; }
+@media (max-width:900px){ .hv-sound{ bottom:6%; padding:.42rem .75rem; font-size:.74rem; } }

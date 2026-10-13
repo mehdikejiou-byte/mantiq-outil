@@ -186,6 +186,7 @@ html.sp-lock, html.sp-lock body{ overflow:hidden; }
               <source src="assets/mantiq-presentation.mp4" type="video/mp4">
             </video>
             <button class="hv-replay" type="button" aria-label="Revoir la vidéo"><span class="hv-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg><span class="hv-txt">Revoir la vidéo</span></span></button>
+            <button class="hv-sound" type="button" aria-label="Activer le son" aria-pressed="false" hidden><svg class="ic-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="m16 9 5 6M21 9l-5 6"/></svg><svg class="ic-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg><span class="hv-stxt">Activer le son</span></button>
           </div>
         </div>
         <p class="sr-only">mantiQ réalise pour vous&nbsp;: logo, site internet, flyers, cartes de visite, charte graphique, réseaux sociaux, plan marketing, étude de marché et stratégie de marque.</p>
@@ -727,16 +728,28 @@ function tvEsc(str){ const d = document.createElement('div'); d.textContent = st
   var v = hv.querySelector('video'), btn = hv.querySelector('.hv-replay'), txt = hv.querySelector('.hv-txt');
   var root = document.documentElement;
   function label(t){ txt.textContent = t; btn.setAttribute('aria-label', t); }
-  function start(){ var p = v.play(); if (p && p.catch) p.catch(function(){ label('Lancer la vidéo'); hv.classList.add('is-ended'); }); }
+  var snd = hv.querySelector('.hv-sound'), stx = hv.querySelector('.hv-stxt');
+  function sndUI(){ if (!snd) return; var on = !v.muted; snd.classList.toggle('is-on', on); snd.setAttribute('aria-pressed', on ? 'true' : 'false'); var t = on ? 'Couper le son' : 'Activer le son'; stx.textContent = t; snd.setAttribute('aria-label', t); }
+  if (snd) { snd.addEventListener('click', function(){ v.muted = !v.muted; if (!v.muted && v.volume === 0) v.volume = 1; sndUI(); }); }
+  function start(withSound){
+    /* on tente avec le son ; si le navigateur refuse l'autoplay sonore, on lance sans le son et on propose d'activer le son */
+    v.muted = !withSound; var p = v.play();
+    var fail = function(){
+      if (withSound) { v.muted = true; var q = v.play(); if (q && q.catch) q.catch(function(){ label('Lancer la vidéo'); hv.classList.add('is-ended'); }); if (snd) { snd.hidden = false; sndUI(); } }
+      else { label('Lancer la vidéo'); hv.classList.add('is-ended'); }
+    };
+    if (p && p.catch) p.catch(fail);
+    if (snd) { snd.hidden = false; sndUI(); }
+  }
   function ready(){ return !root.classList.contains('sp-lock'); }
   v.addEventListener('ended', function(){ label('Revoir la vidéo'); hv.classList.add('is-ended'); });
-  btn.addEventListener('click', function(){ hv.classList.remove('is-ended'); try{ v.currentTime = 0; }catch(e){} start(); });
+  btn.addEventListener('click', function(){ hv.classList.remove('is-ended'); try{ v.currentTime = 0; }catch(e){} start(true); });
   if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) { label('Lancer la vidéo'); hv.classList.add('is-ended'); return; }
-  if (ready()) { start(); }
+  if (ready()) { start(true); }
   else {
-    var mo = new MutationObserver(function(){ if (ready()) { mo.disconnect(); setTimeout(start, 400); } });
+    var mo = new MutationObserver(function(){ if (ready()) { mo.disconnect(); setTimeout(function(){ start(true); }, 400); } });
     mo.observe(root, {attributes:true, attributeFilter:['class']});
-    setTimeout(function(){ if (v.paused && !hv.classList.contains('is-ended') && ready()) start(); }, 12000);
+    setTimeout(function(){ if (v.paused && !hv.classList.contains('is-ended') && ready()) start(true); }, 12000);
   }
 })();
 </script>
