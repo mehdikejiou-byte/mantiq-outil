@@ -1028,8 +1028,8 @@ section{padding-block: clamp(36px, 4.5vw, 64px);}
 .home-hero-visual .hero-q .hero-q-words{ text-shadow:0 1px 8px rgba(0,50,52,.3); }
 @media (max-width:900px){
   .home-hero .wrap{ grid-template-columns:1fr; }
-  .hero-media > .hero-q{ --Q:clamp(112px,30vw,140px); left:clamp(-10px,-.5vw,0px); top:0; }
-  .hero-video{ margin-top:clamp(112px,33vw,140px); }
+  .hero-media > .hero-q{ display:none; }
+  .hero-video{ margin-top:clamp(18px,5vw,28px); }
 }
 /* Fond du hero = fond de la vidéo, pour un fondu sans raccord visible */
 .home-hero.on-mint{ background:#f0f6f4; }
