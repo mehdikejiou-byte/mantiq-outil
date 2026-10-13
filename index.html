@@ -182,7 +182,7 @@ html.sp-lock, html.sp-lock body{ overflow:hidden; }
             </div>
           </div>
           <div class="hero-video" id="heroVideo">
-            <video class="hv" muted playsinline preload="auto" poster="assets/mantiq-presentation-poster.jpg" aria-label="Présentation vidéo de mantiQ" tabindex="-1">
+            <video class="hv" muted playsinline webkit-playsinline preload="auto" poster="assets/mantiq-presentation-poster.jpg" aria-label="Présentation vidéo de mantiQ" tabindex="-1">
               <source src="assets/mantiq-presentation.mp4" type="video/mp4">
             </video>
             <button class="hv-replay" type="button" aria-label="Revoir la vidéo"><span class="hv-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg><span class="hv-txt">Revoir la vidéo</span></span></button>
@@ -740,7 +740,12 @@ function tvEsc(str){ const d = document.createElement('div'); d.textContent = st
       else { label('Lancer la vidéo'); hv.classList.add('is-ended'); }
     };
     if (p && p.catch) p.catch(fail);
+    /* filet de sécurité (iPhone, économie d'énergie…) : si rien ne tourne après 2,5 s, on propose de lancer d'un clic */
+    clearTimeout(watchT);
+    watchT = setTimeout(function(){ if ((v.paused || v.currentTime < 0.1) && !v.ended) { label('Lancer la vidéo'); hv.classList.add('is-ended'); } }, 2500);
   }
+  var watchT = null;
+  v.addEventListener('playing', function(){ clearTimeout(watchT); hv.classList.remove('is-ended'); });
   function ready(){ return !root.classList.contains('sp-lock'); }
   v.addEventListener('ended', function(){ label('Revoir la vidéo'); hv.classList.add('is-ended'); });
   btn.addEventListener('click', function(){ hv.classList.remove('is-ended'); try{ v.currentTime = 0; }catch(e){} start(true); });
