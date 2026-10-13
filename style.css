@@ -978,3 +978,58 @@ section{padding-block: clamp(36px, 4.5vw, 64px);}
 @keyframes floatY{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-12px); } }
 .home-hero-visual .hero-q{ animation:floatY 11s ease-in-out infinite; }
 @media (prefers-reduced-motion:reduce){ .home-hero-visual .hero-q{ animation:none; } }
+
+/* ===== Bandeau chiffres clés (accueil) : bleu foncé légèrement dégradé ===== */
+.home-hero ~ .keyfigures{ background:
+  radial-gradient(ellipse 65% 120% at 0% 100%, rgba(176,224,32,.95) 0%, rgba(122,208,96,.6) 38%, rgba(122,208,96,0) 72%),
+  linear-gradient(115deg,#03595c 0%,#07787a 45%,#2aaea6 100%); }
+.home-hero ~ .keyfigures .eyebrow-tag{ color:#8fe3d8; }
+.home-hero ~ .keyfigures .kf-head h2{ color:#fff; }
+.home-hero ~ .keyfigures .kf-accent{ color:#c6ee5a; }
+.home-hero ~ .keyfigures .kf-intro{ color:#d3ebe8; }
+.home-hero ~ .keyfigures .kf-band{ border-color:rgba(255,255,255,.14); box-shadow:0 14px 34px rgba(0,34,38,.35); }
+
+/* Accueil : chiffres en dégradé très discret (turquoise foncé -> turquoise moyen) */
+.home-hero ~ .keyfigures .kf-band .kf-num{ width:fit-content; margin-left:auto; margin-right:auto;
+  background:linear-gradient(110deg,#04565a 0%,#0c7a7b 55%,#27a49c 100%);
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent; -webkit-text-stroke:0; }
+/* Accueil : chiffres plus grands, contour de même épaisseur qu'avant */
+.home-hero ~ .keyfigures .kf-band .kf-num{ font-size:clamp(2.1rem,2.9vw,3.2rem); margin-bottom:12px; }
+@media (min-width:621px) and (max-width:1365px){
+  .home-hero ~ .keyfigures .kf-band.kf-n5{ grid-template-columns:repeat(3,1fr); }
+  .home-hero ~ .keyfigures .kf-band.kf-n5 .kf-item{ border-left:1px solid rgba(0,103,98,.15); border-top:0; }
+  .home-hero ~ .keyfigures .kf-band.kf-n5 .kf-item:nth-child(3n+1){ border-left:0; }
+  .home-hero ~ .keyfigures .kf-band.kf-n5 .kf-item:nth-child(n+4){ border-top:1px solid rgba(0,103,98,.15); }
+  .home-hero ~ .keyfigures .kf-band .kf-num{ font-size:clamp(1.7rem,4vw,3rem); }
+}
+@media (max-width:620px){ .home-hero ~ .keyfigures .kf-band .kf-num{ font-size:1.7rem; margin-bottom:8px; } }
+
+/* ===== Accueil : vidéo en fondu + bulle Q (bulle de conversation) ===== */
+.home-hero .wrap{ grid-template-columns:1.05fr .95fr; }
+.home-hero-visual{ display:block; min-height:0; }
+.hero-media{ position:relative; width:100%; }
+.hero-video{ position:relative; width:100%; aspect-ratio:16/9; margin-top:clamp(84px,7.4vw,124px); background:transparent; }
+.hero-video video{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; background:transparent; }
+.hv-replay{ position:absolute; inset:0; width:100%; height:100%; border:0; padding:0; margin:0; background:transparent; cursor:pointer; display:none; font:inherit; }
+.hero-video.is-ended .hv-replay{ display:block; }
+.hv-pill{ position:absolute; top:12%; right:10%; display:inline-flex; align-items:center; gap:.45rem; padding:.5rem .95rem; border-radius:999px;
+  background:rgba(255,255,255,.92); color:var(--teal-800); font-weight:800; font-size:.82rem; box-shadow:0 6px 18px rgba(1,71,77,.16); border:1px solid rgba(0,103,98,.16);
+  transition:transform .2s ease, background .2s ease; }
+.hv-pill svg{ width:1rem; height:1rem; }
+.hv-replay:hover .hv-pill, .hv-replay:focus-visible .hv-pill{ transform:translateY(-2px); background:#fff; }
+.hv-replay:focus-visible{ outline:2px solid var(--teal-500); outline-offset:-6px; }
+
+/* Q-bulle : petit, en haut à gauche de la vidéo, textes lisibles */
+.hero-media > .hero-q{ position:absolute; left:-11.5vw; top:-8.2vw; z-index:3; --Q:clamp(124px,9.2vw,160px); width:var(--Q); }
+.home-hero-visual .hero-q .hero-q-words{ left:8%; right:8%; top:43%; }
+.home-hero-visual .hero-q .hq-label{ font-size:6.1cqw; letter-spacing:.05em; line-height:1.18; max-width:68cqw; text-wrap:balance; margin:0 0 2.6cqw; }
+.home-hero-visual .hero-q .hq-slot{ height:27cqw; }
+.home-hero-visual .hero-q .hq-word{ font-size:11.4cqw; line-height:1.06; letter-spacing:-.01em; }
+.home-hero-visual .hero-q .hero-q-words{ text-shadow:0 1px 8px rgba(0,50,52,.3); }
+@media (max-width:900px){
+  .home-hero .wrap{ grid-template-columns:1fr; }
+  .hero-media > .hero-q{ --Q:clamp(112px,30vw,140px); left:clamp(-10px,-.5vw,0px); top:0; }
+  .hero-video{ margin-top:clamp(112px,33vw,140px); }
+}
+/* Fond du hero = fond de la vidéo, pour un fondu sans raccord visible */
+.home-hero.on-mint{ background:#f0f6f4; }
