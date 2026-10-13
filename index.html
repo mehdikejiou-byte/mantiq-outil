@@ -730,16 +730,16 @@ function tvEsc(str){ const d = document.createElement('div'); d.textContent = st
   function label(t){ txt.textContent = t; btn.setAttribute('aria-label', t); }
   var snd = hv.querySelector('.hv-sound'), stx = hv.querySelector('.hv-stxt');
   function sndUI(){ if (!snd) return; var on = !v.muted; snd.classList.toggle('is-on', on); snd.setAttribute('aria-pressed', on ? 'true' : 'false'); var t = on ? 'Couper le son' : 'Activer le son'; stx.textContent = t; snd.setAttribute('aria-label', t); }
+  v.addEventListener('playing', function(){ if (snd) { snd.hidden = false; sndUI(); } });
   if (snd) { snd.addEventListener('click', function(){ v.muted = !v.muted; if (!v.muted && v.volume === 0) v.volume = 1; sndUI(); }); }
   function start(withSound){
     /* on tente avec le son ; si le navigateur refuse l'autoplay sonore, on lance sans le son et on propose d'activer le son */
     v.muted = !withSound; var p = v.play();
     var fail = function(){
-      if (withSound) { v.muted = true; var q = v.play(); if (q && q.catch) q.catch(function(){ label('Lancer la vidéo'); hv.classList.add('is-ended'); }); if (snd) { snd.hidden = false; sndUI(); } }
+      if (withSound) { v.muted = true; var q = v.play(); if (q && q.catch) q.catch(function(){ label('Lancer la vidéo'); hv.classList.add('is-ended'); }); if (snd) { sndUI(); } }
       else { label('Lancer la vidéo'); hv.classList.add('is-ended'); }
     };
     if (p && p.catch) p.catch(fail);
-    if (snd) { snd.hidden = false; sndUI(); }
   }
   function ready(){ return !root.classList.contains('sp-lock'); }
   v.addEventListener('ended', function(){ label('Revoir la vidéo'); hv.classList.add('is-ended'); });
