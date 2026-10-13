@@ -186,6 +186,8 @@ html.sp-lock, html.sp-lock body{ overflow:hidden; }
               <source src="assets/mantiq-presentation.mp4" type="video/mp4">
             </video>
             <button class="hv-replay" type="button" aria-label="Revoir la vidéo"><span class="hv-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg><span class="hv-txt">Revoir la vidéo</span></span></button>
+            <button class="hv-toggle" type="button" aria-label="Lire la vidéo"><svg class="ic-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg><svg class="ic-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4.2" height="14" rx="1.2"/><rect x="13.8" y="5" width="4.2" height="14" rx="1.2"/></svg></button>
+            <button class="hv-ctl" type="button" aria-label="Lancer la vidéo"><svg class="ic-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg><svg class="ic-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4.2" height="14" rx="1.2"/><rect x="13.8" y="5" width="4.2" height="14" rx="1.2"/></svg></button>
             <button class="hv-sound" type="button" aria-label="Activer le son" aria-pressed="false" hidden><svg class="ic-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="m16 9 5 6M21 9l-5 6"/></svg><svg class="ic-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg><span class="hv-stxt">Activer le son</span></button>
           </div>
         </div>
@@ -744,7 +746,29 @@ function tvEsc(str){ const d = document.createElement('div'); d.textContent = st
     clearTimeout(watchT);
     watchT = setTimeout(function(){ if ((v.paused || v.currentTime < 0.1) && !v.ended) { label('Lancer la vidéo'); hv.classList.add('is-ended'); } }, 2500);
   }
+  var tg = hv.querySelector('.hv-toggle');
+  function tgUI(){ if (!tg) return; var pl = !v.paused && !v.ended; tg.classList.toggle('is-playing', pl); tg.setAttribute('aria-label', pl ? 'Mettre la vidéo en pause' : 'Lire la vidéo'); }
+  ['play','playing','pause','ended'].forEach(function(ev){ v.addEventListener(ev, tgUI); });
+  if (tg) { tg.addEventListener('click', function(e){
+    e.stopPropagation();
+    if (v.paused || v.ended) {
+      hv.classList.remove('is-ended'); clearTimeout(watchT);
+      if (v.ended) { try{ v.currentTime = 0; }catch(err){} }
+      v.muted = false; var p = v.play();
+      if (p && p.catch) p.catch(function(){ v.muted = true; var q = v.play(); if (q && q.catch) q.catch(function(){ v.controls = true; }); });
+    } else { v.pause(); }
+    tgUI(); sndUI();
+  }); }
   var watchT = null;
+  var ctl = hv.querySelector('.hv-ctl');
+  function ctlUI(){ if (!ctl) return; var pl = !v.paused && !v.ended; ctl.classList.toggle('is-playing', pl); var t = pl ? 'Mettre la vidéo en pause' : (v.ended ? 'Revoir la vidéo' : 'Lancer la vidéo'); ctl.setAttribute('aria-label', t); }
+  ['play','playing','pause','ended','emptied'].forEach(function(ev){ v.addEventListener(ev, ctlUI); });
+  if (ctl) { ctl.addEventListener('click', function(){
+    if (!v.paused && !v.ended) { clearTimeout(watchT); v.pause(); return; }
+    hv.classList.remove('is-ended'); if (v.ended) { try{ v.currentTime = 0; }catch(e){} }
+    var q = v.play(); if (q && q.catch) q.catch(function(){ v.muted = true; var r = v.play(); if (r && r.catch) r.catch(function(){}); sndUI(); });
+    if (!v.muted) sndUI();
+  }); ctlUI(); }
   v.addEventListener('playing', function(){ clearTimeout(watchT); hv.classList.remove('is-ended'); });
   function ready(){ return !root.classList.contains('sp-lock'); }
   v.addEventListener('ended', function(){ label('Revoir la vidéo'); hv.classList.add('is-ended'); });
