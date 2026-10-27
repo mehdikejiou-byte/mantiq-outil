@@ -76,6 +76,7 @@
         <span class="eyebrow-tag">Réalisations</span>
         <h1 style="font-size:clamp(1.75rem,2.6vw,2.3rem); color:var(--teal-800); font-weight:800;">Nos projets, <span class="grad-text">votre réussite</span></h1>
         <p class="lede">Découvrez une sélection de nos réalisations en graphisme et en conseil. Chaque projet est une collaboration unique, pensée pour répondre aux besoins et aux ambitions de nos clients.</p>
+        <a class="pf-jump" href="#portfolio-livre">Explorer le portfolio <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
       </div>
       <div class="filter-tabs reveal">
         <button class="filter-tab active" data-filter="tous">Tous</button>
@@ -146,6 +147,519 @@
       </div>
     </div>
   </section>
+
+  <section class="pf-section" id="portfolio-livre" aria-labelledby="pfTitle">
+    <div class="wrap">
+      <div class="pf-head reveal">
+        <span class="eyebrow-tag">Portfolio</span>
+        <h2 id="pfTitle">Le portfolio <span class="grad-text">en suspension</span></h2>
+        <p>Chaque projet flotte dans l'espace, avec ses planches et ses détails rangés autour. Faites glisser pour explorer, survolez une pièce pour la faire avancer, puis cliquez pour l'agrandir.</p>
+      </div>
+      <div class="pf-grid">
+        <div class="pf-left">
+      <div class="pf-bar reveal" id="pfBar" role="group" aria-label="Filtrer le portfolio"></div>
+        <div class="dk-wrap reveal">
+        <div class="dk" id="dk" tabindex="0" role="group" aria-roledescription="espace à explorer" aria-label="Portfolio en 3D. Glissez pour explorer, flèches du clavier pour vous déplacer, Tab pour passer d'une pièce à l'autre, Entrée pour agrandir.">
+          <div class="dk-bg" id="dkBg"></div>
+          <div class="dk-tilt" id="dkTilt"><div class="dk-world" id="dkWorld"></div></div>
+        </div>
+          <div class="dk-hint" id="dkHint"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20"/></svg><span>Glissez pour explorer &middot; cliquez pour agrandir</span></div>
+          <div class="dk-ui bl">
+            <button class="dk-btn" id="dkOverview" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg><span id="dkOverviewTxt">Vue d'ensemble</span></button>
+            <button class="dk-btn" id="dkCenter" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg>Recentrer</button>
+          </div>
+          <div class="dk-ui tr"><div class="dk-mini" id="dkMini" aria-hidden="true"><b id="dkMiniView"></b></div></div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="pf-viewer" id="pfLb" aria-hidden="true" role="dialog" aria-label="Planche du portfolio en grand">
+    <div class="pf-vstage" id="pfVStage"><img class="pf-vimg" id="pfVImg" src="" alt="" draggable="false"></div>
+    <div class="pf-vcap" id="pfVCap"></div>
+    <div class="pf-vtools">
+      <button class="pf-vtool" id="pfZoomOut" type="button" aria-label="Dézoomer">&minus;</button>
+      <span class="pf-vzoom" id="pfZoomVal">100%</span>
+      <button class="pf-vtool" id="pfZoomIn" type="button" aria-label="Zoomer">+</button>
+    </div>
+    <button class="pf-vclose" id="pfLbClose" type="button" aria-label="Fermer">&times;</button>
+    <button class="pf-vnav pf-vprev" id="pfLbPrev" type="button" aria-label="Planche précédente">&lsaquo;</button>
+    <button class="pf-vnav pf-vnext" id="pfLbNext" type="button" aria-label="Planche suivante">&rsaquo;</button>
+    <div class="pf-vhint">Molette ou pincement pour zoomer &middot; glissez pour d&eacute;placer</div>
+    <div class="pf-vthumbs" id="pfVThumbs"></div>
+  </div>
+
+  <script>
+  (function(){
+    var dk = document.getElementById('dk');
+    if (!dk) return;
+    var world = document.getElementById('dkWorld'), bg = document.getElementById('dkBg'), hint = document.getElementById('dkHint');
+    var bar = document.getElementById('pfBar'), mini = document.getElementById('dkMini'), miniView = document.getElementById('dkMiniView');
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var P = 595 / 842;
+    function pg(n){ return {src:'portfolio-bureau-' + n + '.webp', full:'portfolio-page-' + n + '.webp', hd:'portfolio-page-' + n + '-hd.webp'}; }
+    function fr(n){ return {src:'portfolio-frag-' + n + '.webp', full:'portfolio-frag-' + n + '.webp', hd:''}; }
+    /* x, y, r = position et rotation sur le bureau ; w = largeur ; ar = hauteur / largeur */
+    var ITEMS = [
+      Object.assign(pg(1), {id:'p1', n:'01', cat:'intro', t:'Couverture', s:'Portfolio de Mehdi Kejiou, graphiste', alt:'Couverture du portfolio de Mehdi Kejiou, graphiste', x:110, y:130, r:0, w:520, ar:P}),
+      Object.assign(pg(2), {id:'p2', n:'02', cat:'campagne', t:'Terre de Mai', s:'Campagne publicitaire', alt:'Terre de Mai, campagne publicitaire : planche d’inspiration, affiche, abribus, support éditorial et bannière web', x:800, y:130, r:0, w:520, ar:P}),
+      Object.assign(fr('tdm-planche'), {id:'p2a', n:'02', cat:'campagne', t:'Terre de Mai', s:'Planche d’inspiration', alt:'Terre de Mai : planche d’inspiration', x:800, y:549, r:0, w:200, ar:1/1.411}),
+      Object.assign(fr('tdm-affiche'), {id:'p2b', n:'02', cat:'campagne', t:'Terre de Mai', s:'Affiche', alt:'Terre de Mai : affiche', x:1016, y:549, r:0, w:120, ar:1/0.713}),
+      Object.assign(fr('tdm-abribus'), {id:'p2c', n:'02', cat:'campagne', t:'Terre de Mai', s:'Affiche abribus', alt:'Terre de Mai : affiche abribus', x:1152, y:549, r:0, w:148, ar:1/0.835}),
+      Object.assign(pg(3), {id:'p3', n:'03', cat:'edition', t:'Le Petit Poucet', s:'Édition d’un livre pour enfant', alt:'Le Petit Poucet, édition d’un livre pour enfant', x:1490, y:130, r:0, w:520, ar:P}),
+      Object.assign(fr('pp-couv'), {id:'p3a', n:'03', cat:'edition', t:'Le Petit Poucet', s:'Couverture du livre', alt:'Le Petit Poucet : couverture', x:1490, y:549, r:0, w:230, ar:1/1.421}),
+      Object.assign(fr('pp-livre'), {id:'p3b', n:'03', cat:'edition', t:'Le Petit Poucet', s:'Le livre ouvert', alt:'Le Petit Poucet : le livre ouvert', x:1736, y:549, r:0, w:254, ar:1/1.002}),
+      Object.assign(pg(4), {id:'p4', n:'04', cat:'ident', t:'La Casbah', s:'Logo et identité visuelle', alt:'La Casbah : logo, typographie, couleurs et déclinaisons', x:2180, y:130, r:0, w:520, ar:P}),
+      Object.assign(fr('cas-logo'), {id:'p4a', n:'04', cat:'ident', t:'La Casbah', s:'Le logo', alt:'La Casbah : logo', x:2180, y:549, r:0, w:190, ar:1/1.5916}),
+      Object.assign(fr('cas-typo'), {id:'p4b', n:'04', cat:'ident', t:'La Casbah', s:'Typographie', alt:'La Casbah : typographie', x:2384, y:549, r:0, w:316, ar:1/2.172}),
+      Object.assign(fr('cas-bougie'), {id:'p4c', n:'04', cat:'ident', t:'La Casbah', s:'Déclinaison sur bougie', alt:'La Casbah : déclinaison sur bougie', x:2384, y:714, r:0, w:316, ar:1/2.137}),
+      Object.assign(pg(5), {id:'p5', n:'05', cat:'ident', t:'Musée de la Magie', s:'Logo, identité visuelle et affiche abribus', alt:'Musée de la Magie : logo, identité visuelle et affiche abribus', x:110, y:920, r:0, w:520, ar:P}),
+      Object.assign(fr('mus-affiche'), {id:'p5a', n:'05', cat:'ident', t:'Musée de la Magie', s:'Affiche abribus', alt:'Musée de la Magie : affiche abribus', x:110, y:1339, r:0, w:128, ar:1/0.752}),
+      Object.assign(fr('mus-logo'), {id:'p5b', n:'05', cat:'ident', t:'Musée de la Magie', s:'Le logo', alt:'Musée de la Magie : logo', x:254, y:1339, r:0, w:250, ar:1/1.988}),
+      Object.assign(fr('mus-typo'), {id:'p5c', n:'05', cat:'ident', t:'Musée de la Magie', s:'Typographie', alt:'Musée de la Magie : typographie', x:254, y:1481, r:0, w:250, ar:1/2.543}),
+      Object.assign(fr('mus-couleurs'), {id:'p5d', n:'05', cat:'ident', t:'Musée de la Magie', s:'Palette de couleurs', alt:'Musée de la Magie : palette de couleurs', x:520, y:1339, r:0, w:110, ar:1/2.066}),
+      Object.assign(pg(6), {id:'p6', n:'06', cat:'campagne', t:'Rêves éveillés', s:'Pochette vinyle de L’Échappée Belle', alt:'Affichage : pochette vinyle « Rêves éveillés » de L’Échappée Belle', x:800, y:920, r:0, w:520, ar:P}),
+      Object.assign(fr('reves'), {id:'p6a', n:'06', cat:'campagne', t:'Rêves éveillés', s:'La pochette', alt:'Rêves éveillés : pochette vinyle', x:940, y:1339, r:0, w:240, ar:1/0.999}),
+      Object.assign(pg(7), {id:'p7', n:'07', cat:'campagne', t:'Santé publique', s:'Campagne de prévention', alt:'Affichage : campagne de prévention santé publique', x:1490, y:920, r:0, w:520, ar:P}),
+      Object.assign(fr('sante'), {id:'p7a', n:'07', cat:'campagne', t:'Santé publique', s:'Les affiches', alt:'Santé publique : les affiches', x:1585, y:1339, r:0, w:330, ar:1/1.433}),
+      Object.assign(pg(8), {id:'p8', n:'08', cat:'campagne', t:'Albrecht Dürer', s:'Planche d’exposition, Musée régional de Champagne-Ardenne', alt:'Affichage : planche de présentation de l’exposition Albrecht Dürer', x:2180, y:920, r:0, w:520, ar:P}),
+      Object.assign(fr('durer'), {id:'p8a', n:'08', cat:'campagne', t:'Albrecht Dürer', s:'L’affiche d’exposition', alt:'Albrecht Dürer : affiche d’exposition', x:2360, y:1339, r:0, w:160, ar:1/0.698})
+    ];
+    /* échange d'emplacements : Terre de Mai <-> La Casbah, Musée de la Magie <-> Albrecht Dürer, Rêves éveillés <-> Santé publique */
+    (function(){
+      var SH = {'02':[1380, 0], '04':[-1380, 0], '05':[2070, 0], '08':[-2070, 0], '06':[690, 0], '07':[-690, 0]};
+      ITEMS.forEach(function(it){ var s = SH[it.n]; if (s) { it.x += s[0]; it.y += s[1]; } });
+    })();
+    /* projets phares : plus grands, en avant, avec un liseré */
+    (function(){
+      var K = 1.14, orig = {};
+      ITEMS.forEach(function(it){ if (it.id === 'p2' || it.id === 'p5') orig[it.n] = {x:it.x, y:it.y}; });
+      ITEMS.forEach(function(it){
+        if (!orig[it.n]) return;
+        var o = orig[it.n];
+        it.x = o.x + (it.x - o.x) * K; it.y = o.y + (it.y - o.y) * K; it.w *= K; it.star = true;
+      });
+    })();
+    var CATS = [ {k:'all', l:'Tout'}, {k:'phare', l:'\u2605 Projets phares'}, {k:'ident', l:'Identité visuelle'}, {k:'campagne', l:'Affichage & campagnes'}, {k:'edition', l:'Édition'} ];
+    var BASE_X = 9, BASE_Y = -12, fitMode = false, fitView = null, dkWrap = dk.parentNode;
+    var W = 0, H = 0, s0 = 1, view = {x:0, y:0, s:1}, filter = 'all', zTop = 40, tween = null, inertia = null, touched = false, introDone = false;
+    var bbox = {x0:1e9, y0:1e9, x1:-1e9, y1:-1e9};
+
+    /* ---------- construction ---------- */
+    function esc(t){ var d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+    ITEMS.forEach(function(it, i){
+      it.frag = it.id.length > 2;
+      it.h = it.w * it.ar;
+      it.zz = (it.frag ? 70 : 0) + (it.star ? 40 : 0);
+      var el = document.createElement('div');
+      el.className = 'dk-item' + (it.frag ? ' is-frag' : ' is-page') + (it.star ? ' is-star' : '');
+      el.style.width = it.w + 'px'; el.style.height = it.h + 'px';
+      el.tabIndex = 0; el.setAttribute('role', 'button'); el.setAttribute('aria-label', it.n + ' — ' + it.t + ' : ' + it.s + '. Entrée pour agrandir.');
+      el.dataset.id = it.id;
+      el.innerHTML =
+        '<div class="dk-fl"><div class="dk-card"><img alt="' + esc(it.alt).replace(/"/g, '&quot;') + '" decoding="async" draggable="false">' +
+        '<span class="dk-tab"><i>' + it.n + '</i>' + esc(it.frag ? it.s : it.t) + (it.star && !it.frag ? '<u>\u2605 Projet phare</u>' : '') + '</span></div>' +
+        '<div class="dk-note"><strong>' + esc(it.t) + '</strong><span>' + esc(it.s) + '</span><em>Cliquer pour agrandir</em></div></div>';
+      el.querySelector('img').dataset.src = it.src;
+      it.el = el; world.appendChild(el);
+      it.cx = it.x + it.w / 2; it.cy = it.y + it.h / 2;
+    });
+    function recomputeBox(){
+      bbox = {x0:1e9, y0:1e9, x1:-1e9, y1:-1e9};
+      ITEMS.forEach(function(it){
+        var pad = it.frag ? 10 : 22;
+        bbox.x0 = Math.min(bbox.x0, it.x - pad); bbox.y0 = Math.min(bbox.y0, it.y - pad - 30);
+        bbox.x1 = Math.max(bbox.x1, it.x + it.w + pad); bbox.y1 = Math.max(bbox.y1, it.y + it.h + pad + 10);
+      });
+    }
+    recomputeBox();
+    /* décor : mots fantômes en retrait (profondeur) */
+    [['Portfolio', 80, -130], ['mantiQ', 1450, 1330]].forEach(function(g){
+      var d = document.createElement('div'); d.className = 'dk-ghost'; d.textContent = g[0]; d.setAttribute('aria-hidden', 'true');
+      d.style.left = g[1] + 'px'; d.style.top = g[2] + 'px'; world.insertBefore(d, world.firstChild);
+    });
+    var intro = document.createElement('div'); intro.className = 'dk-intro'; intro.setAttribute('aria-hidden', 'true');
+    intro.style.transform = 'translate3d(110px,560px,30px)';
+    intro.innerHTML = '<b>8</b><strong>projets</strong><p>Identit\u00e9 visuelle, affichage et \u00e9dition. Survolez une pi\u00e8ce pour la faire avancer, cliquez pour l\u2019agrandir.</p>';
+    world.insertBefore(intro, world.firstChild);
+    /* filtres */
+    function count(k){ return ITEMS.filter(function(it){ return k === 'all' || (k === 'phare' ? it.star : it.cat === k); }).length; }
+    CATS.forEach(function(c){
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'pf-pill' + (c.k === 'all' ? ' on' : ''); b.dataset.k = c.k;
+      b.setAttribute('aria-pressed', c.k === 'all' ? 'true' : 'false');
+      b.innerHTML = esc(c.l) + ' <b>' + count(c.k) + '</b>';
+      b.addEventListener('click', function(){ setFilter(c.k); });
+      bar.appendChild(b);
+    });
+    /* mini-carte */
+    var MM = 1, mmX = 0, mmY = 0;
+    ITEMS.forEach(function(it){ var i = document.createElement('i'); it.mm = i; mini.insertBefore(i, miniView); });
+    function layoutMini(){
+      var mw = mini.clientWidth || 150, mh = mini.clientHeight || 96, bw = bbox.x1 - bbox.x0, bh = bbox.y1 - bbox.y0;
+      MM = Math.min((mw - 12) / bw, (mh - 12) / bh); mmX = (mw - bw * MM) / 2 - bbox.x0 * MM; mmY = (mh - bh * MM) / 2 - bbox.y0 * MM;
+      ITEMS.forEach(function(it){
+        var i = it.mm; i.style.left = (it.x * MM + mmX) + 'px'; i.style.top = (it.y * MM + mmY) + 'px'; i.style.width = Math.max(2, it.w * MM) + 'px'; i.style.height = Math.max(2, it.h * MM) + 'px';
+        i.style.transform = 'rotate(' + it.r + 'deg)'; i.classList.toggle('off', !visible(it));
+      });
+    }
+    function visible(it){ return filter === 'all' || (filter === 'phare' ? !!it.star : it.cat === filter); }
+
+    /* ---------- vue (déplacement) ---------- */
+    function clampView(v){
+      if (fitMode && fitView) { v.x = fitView.x; v.y = fitView.y; v.s = fitView.s; return v; }
+      var mx = 110, mt = 190, mb = 130;
+      var minX = W - (bbox.x1 + mx) * v.s, maxX = -(bbox.x0 - mx) * v.s, minY = H - (bbox.y1 + mb) * v.s, maxY = -(bbox.y0 - mt) * v.s;
+      v.x = (minX > maxX) ? (minX + maxX) / 2 : Math.max(minX, Math.min(maxX, v.x));
+      v.y = (minY > maxY) ? (minY + maxY) / 2 : Math.max(minY, Math.min(maxY, v.y));
+      return v;
+    }
+    function render(){
+      world.style.transform = 'translate3d(' + view.x.toFixed(1) + 'px,' + view.y.toFixed(1) + 'px,0) scale(' + view.s.toFixed(4) + ')';
+      bg.style.backgroundPosition = (view.x % 36).toFixed(1) + 'px ' + (view.y % 36).toFixed(1) + 'px';
+      var vw = W / view.s, vh = H / view.s, wx = -view.x / view.s, wy = -view.y / view.s;
+      miniView.style.left = (wx * MM + mmX) + 'px'; miniView.style.top = (wy * MM + mmY) + 'px'; miniView.style.width = (vw * MM) + 'px'; miniView.style.height = (vh * MM) + 'px';
+    }
+    function stopMotion(){ if (tween) { cancelAnimationFrame(tween); tween = null; } if (inertia) { cancelAnimationFrame(inertia); inertia = null; } }
+    function ease(t){ return 1 - Math.pow(1 - t, 3); }
+    function goTo(tx, ty, ts, dur){
+      stopMotion();
+      var t0 = view, a = {x:view.x, y:view.y, s:view.s}, b = clampView({x:tx, y:ty, s:ts});
+      if (reduce || !dur) { view = b; render(); return; }
+      var st = performance.now();
+      (function step(now){
+        var k = Math.min(1, (now - st) / dur), e = ease(k);
+        view = {x:a.x + (b.x - a.x) * e, y:a.y + (b.y - a.y) * e, s:a.s + (b.s - a.s) * e}; render();
+        tween = k < 1 ? requestAnimationFrame(step) : null;
+      })(st);
+    }
+    function centerOn(wx, wy, s, dur){ s = s || view.s; goTo(W / 2 - wx * s, H / 2 - wy * s, s, dur === undefined ? 750 : dur); }
+    function fitBox(items){
+      var x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+      items.forEach(function(it){ x0 = Math.min(x0, it.x - 50); y0 = Math.min(y0, it.y - 190); x1 = Math.max(x1, it.x + it.w + 50); y1 = Math.max(y1, it.y + it.h + 140); });
+      return {x:(x0 + x1) / 2, y:(y0 + y1) / 2, s:Math.min(W / (x1 - x0), H / (y1 - y0))};
+    }
+    var overview = false;
+    function setOverviewLabel(){ document.getElementById('dkOverviewTxt').textContent = overview ? 'Retour au bureau' : 'Vue d’ensemble'; }
+    function home(dur){ overview = false; setOverviewLabel(); var c = homeC(); centerOn(c[0], c[1], s0, dur); }
+    function homeC(){ return [30 + W / (2 * s0), bbox.y0 - 150 + H / (2 * s0)]; }
+    document.getElementById('dkCenter').addEventListener('click', function(){ touched = true; hideHint(); filter !== 'all' ? setFilter('all') : home(); });
+    document.getElementById('dkOverview').addEventListener('click', function(){
+      touched = true; hideHint();
+      if (overview) { home(); return; }
+      var f = fitBox(ITEMS.filter(visible)); overview = true; setOverviewLabel(); centerOn(f.x, f.y, Math.min(f.s * .96, s0), 800);
+    });
+    mini.addEventListener('click', function(e){
+      var r = mini.getBoundingClientRect(); touched = true; hideHint();
+      centerOn((e.clientX - r.left - mmX) / MM, (e.clientY - r.top - mmY) / MM, view.s, 600);
+    });
+    function hideHint(){ hint.classList.add('gone'); }
+
+    function setFilter(k){
+      filter = k; touched = true; dk.classList.toggle('is-filtered', k !== 'all'); hideHint(); overview = false; setOverviewLabel();
+      Array.prototype.forEach.call(bar.children, function(b){ var on = b.dataset.k === k; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+      ITEMS.forEach(function(it){ var v = visible(it); it.el.classList.toggle('is-off', !v); it.el.tabIndex = v ? 0 : -1; if (!v) it.el.setAttribute('aria-hidden', 'true'); else it.el.removeAttribute('aria-hidden'); });
+      layoutMini();
+      if (fitMode) return; if (k === 'all') home(); else { var f = fitBox(ITEMS.filter(visible)); centerOn(f.x, f.y, Math.max(.4, Math.min(f.s * .94, 1)), 800); }
+    }
+
+    /* ---------- mesures ---------- */
+    /* projection d'un point du bureau \u00e0 l'\u00e9cran, inclinaison 3D comprise (pour caler tout le bureau dans le cadre) */
+    function project(x, y, z, v, Hh){
+      var X = x * v.s + v.x - W / 2, Y = y * v.s + v.y - Hh / 2, a = BASE_X * Math.PI / 180, b = BASE_Y * Math.PI / 180;
+      var x1 = X * Math.cos(b) + z * Math.sin(b), z1 = -X * Math.sin(b) + z * Math.cos(b);
+      var y2 = Y * Math.cos(a) - z1 * Math.sin(a), z2 = Y * Math.sin(a) + z1 * Math.cos(a);
+      var ox = W / 2, oy = .42 * Hh, f = 1700 / (1700 - z2);
+      return {x: ox + (W / 2 + x1 - ox) * f, y: oy + (Hh / 2 + y2 - oy) * f};
+    }
+    function computeFit(){
+      var pad = 44, cxw = (bbox.x0 + bbox.x1) / 2, cyw = (bbox.y0 + bbox.y1) / 2;
+      var s = Math.min(.95, (W - 2 * pad) / (bbox.x1 - bbox.x0)), Hh = (bbox.y1 - bbox.y0) * s + 2 * pad, v, mnx, mxx, mny, mxy;
+      for (var k = 0; k < 8; k++) {
+        v = {s:s, x:W / 2 - cxw * s, y:Hh / 2 - cyw * s}; mnx = mny = 1e9; mxx = mxy = -1e9;
+        ITEMS.forEach(function(it){
+          [[it.x, it.y - 36], [it.x + it.w, it.y - 36], [it.x, it.y + it.h], [it.x + it.w, it.y + it.h]].forEach(function(c){
+            var p = project(c[0], c[1], it.zz + 40, v, Hh); mnx = Math.min(mnx, p.x); mxx = Math.max(mxx, p.x); mny = Math.min(mny, p.y); mxy = Math.max(mxy, p.y);
+          });
+        });
+        var sx = (W - 2 * pad) / (mxx - mnx); s = Math.min(.95, s * sx); Hh = (mxy - mny) * sx + 2 * pad;
+      }
+      v = {s:s, x:W / 2 - cxw * s, y:Hh / 2 - cyw * s};
+      mnx = mny = 1e9; mxx = mxy = -1e9;
+      ITEMS.forEach(function(it){
+        [[it.x, it.y - 36], [it.x + it.w, it.y - 36], [it.x, it.y + it.h], [it.x + it.w, it.y + it.h]].forEach(function(c){
+          var p = project(c[0], c[1], it.zz + 40, v, Hh); mnx = Math.min(mnx, p.x); mxx = Math.max(mxx, p.x); mny = Math.min(mny, p.y); mxy = Math.max(mxy, p.y);
+        });
+      });
+      v.x += W / 2 - (mnx + mxx) / 2; v.y += Hh / 2 - (mny + mxy) / 2;
+      return {view:v, H:Math.round(Hh)};
+    }
+    function measure(){
+      fitMode = window.innerWidth >= 900;
+      dkWrap.classList.toggle('is-fit', fitMode);
+      if (fitMode) {
+        W = dk.clientWidth; var r = computeFit(); H = r.H; dkWrap.style.height = H + 'px'; fitView = r.view; s0 = r.view.s;
+      } else {
+        dkWrap.style.height = ''; W = dk.clientWidth; H = dk.clientHeight;
+        s0 = Math.max(.42, Math.min(.8, W / 2250));
+        if (W < 560) s0 = .46;
+      }
+    }
+    var ready = false;
+    function init(){
+      measure(); layoutMini();
+      var hc = homeC(); view = fitMode ? {x:fitView.x, y:fitView.y, s:fitView.s} : clampView({x:W / 2 - hc[0] * s0, y:H / 2 - hc[1] * s0, s:s0}); render(); ready = true;
+    }
+    window.addEventListener('resize', function(){
+      if (!ready) return; var cx = (W / 2 - view.x) / view.s, cy = (H / 2 - view.y) / view.s;
+      measure(); layoutMini(); view = clampView({x:W / 2 - cx * s0, y:H / 2 - cy * s0, s:s0}); render();
+    });
+    init();
+
+    /* ---------- chargement + arrivée des pièces ---------- */
+    var loaded = false;
+    function loadAll(){ if (loaded) return; loaded = true; ITEMS.forEach(function(it){ var im = it.el.querySelector('img'); if (!im.src) im.src = im.dataset.src; }); }
+    function place(it){ it.el.style.transform = 'translate3d(' + it.x.toFixed(1) + 'px,' + it.y.toFixed(1) + 'px,' + it.zz + 'px)'; }
+    function startPos(it, i){
+      var cx = (W / 2 - view.x) / view.s - it.w / 2, cy = (H / 2 - view.y) / view.s - it.h / 2;
+      it.el.classList.add('no-tr'); it.el.style.opacity = 0;
+      it.el.style.transform = 'translate3d(' + cx.toFixed(1) + 'px,' + cy.toFixed(1) + 'px,-900px) rotateY(' + ((i % 5 - 2) * 25) + 'deg)';
+    }
+    ITEMS.forEach(function(it, i){ if (reduce) place(it); else startPos(it, i); });
+    function arrive(){
+      if (introDone) return; introDone = true;
+      if (reduce) return;
+      void world.offsetWidth;
+      ITEMS.forEach(function(it, i){
+        it.el.classList.remove('no-tr');
+        it.el.style.transitionDelay = (i * 70) + 'ms';
+        it.el.style.opacity = 1; place(it);
+      });
+      setTimeout(function(){ ITEMS.forEach(function(it){ it.el.style.transitionDelay = ''; it.el.style.opacity = ''; }); }, ITEMS.length * 70 + 1100);
+    }
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function(es){ if (es[0].isIntersecting) { loadAll(); } }, {rootMargin:'1000px 0px'}); io.observe(dk);
+      var io2 = new IntersectionObserver(function(es){ if (es[0].isIntersecting) { arrive(); io2.disconnect(); } }, {threshold:.3}); io2.observe(dk);
+    } else { loadAll(); arrive(); }
+    if (reduce) { introDone = true; }
+
+    /* ---------- glisser : plan et pièces ---------- */
+    /* inclinaison 3D qui suit doucement le pointeur */
+    var tilt = document.getElementById('dkTilt'), tg = {x:BASE_X, y:BASE_Y}, tc = {x:BASE_X, y:BASE_Y}, tRaf = null, fine = window.matchMedia('(pointer:fine)').matches;
+    function applyTilt(){ tilt.style.transform = 'rotateX(' + tc.x.toFixed(2) + 'deg) rotateY(' + tc.y.toFixed(2) + 'deg)'; }
+    applyTilt();
+    function tiltLoop(){
+      tc.x += (tg.x - tc.x) * .08; tc.y += (tg.y - tc.y) * .08; applyTilt();
+      tRaf = (Math.abs(tg.x - tc.x) + Math.abs(tg.y - tc.y) > .02) ? requestAnimationFrame(tiltLoop) : null;
+    }
+    if (fine && !reduce) {
+      dk.addEventListener('mousemove', function(e){
+        var r = dk.getBoundingClientRect(), mx = (e.clientX - r.left) / r.width - .5, my = (e.clientY - r.top) / r.height - .5;
+        tg.x = BASE_X - my * 4; tg.y = BASE_Y + mx * 6; if (!tRaf) tRaf = requestAnimationFrame(tiltLoop);
+      });
+      dk.addEventListener('mouseleave', function(){ tg.x = BASE_X; tg.y = BASE_Y; if (!tRaf) tRaf = requestAnimationFrame(tiltLoop); });
+    }
+    var drag = null;
+    function itemOf(el){ var n = el.closest ? el.closest('.dk-item') : null; if (!n || n.classList.contains('is-off')) return null; return ITEMS.filter(function(it){ return it.el === n; })[0] || null; }
+    dk.addEventListener('pointerdown', function(e){
+      if (e.button > 0 || e.target.closest('.dk-ui, .dk-hint')) return;
+      stopMotion();
+      drag = {id:e.pointerId, x:e.clientX, y:e.clientY, lx:e.clientX, ly:e.clientY, t:performance.now(), vx:0, vy:0, moved:false, item:itemOf(e.target), type:e.pointerType};
+      try { dk.setPointerCapture(e.pointerId); } catch(err){}
+    });
+    dk.addEventListener('pointermove', function(e){
+      if (!drag || e.pointerId !== drag.id) return;
+      var dx = e.clientX - drag.lx, dy = e.clientY - drag.ly;
+      if (!drag.moved) {
+        if (Math.abs(e.clientX - drag.x) < 6 && Math.abs(e.clientY - drag.y) < 6) return;
+        drag.moved = true; touched = true; hideHint();
+        if (drag.item) { drag.item.el.classList.add('is-drag'); drag.item.zz = Math.min(150, 84 + (++zTop - 40) * 2); place(drag.item); } else dk.classList.add('is-pan');
+        dx = e.clientX - drag.x; dy = e.clientY - drag.y;
+      }
+      var now = performance.now(), dt = Math.max(1, now - drag.t);
+      drag.vx = .7 * drag.vx + .3 * (dx / dt); drag.vy = .7 * drag.vy + .3 * (dy / dt); drag.t = now;
+      drag.lx = e.clientX; drag.ly = e.clientY;
+      if (drag.item) {
+        var it = drag.item;
+        it.x += dx / view.s; it.y += dy / view.s; it.cx = it.x + it.w / 2; it.cy = it.y + it.h / 2;
+        it.x = Math.max(-40, Math.min(2900 - it.w + 40, it.x)); it.y = Math.max(-20, Math.min(1800 - it.h + 40, it.y));
+        place(it); it.mm.style.left = (it.x * MM + mmX) + 'px'; it.mm.style.top = (it.y * MM + mmY) + 'px';
+      } else {
+        view.x += dx; view.y += dy; var c = {x:view.x, y:view.y, s:view.s}; clampView(c);
+        view.x = c.x + (view.x - c.x) * .35; view.y = c.y + (view.y - c.y) * .35; render();
+      }
+    });
+    function endDrag(e){
+      if (!drag || e.pointerId !== drag.id) return;
+      var d = drag; drag = null; dk.classList.remove('is-pan');
+      if (d.item) d.item.el.classList.remove('is-drag');
+      if (!d.moved) { if (d.item && e.type === 'pointerup') openLb(d.item); return; }
+      if (d.item) { recomputeBox(); layoutMini(); render(); return; }
+      var vx = d.vx * 16, vy = d.vy * 16; if (performance.now() - d.t > 90) { vx = vy = 0; }
+      (function glide(){
+        view.x += vx; view.y += vy; vx *= .94; vy *= .94;
+        var c = {x:view.x, y:view.y, s:view.s}; clampView(c); view.x += (c.x - view.x) * .25; view.y += (c.y - view.y) * .25; render();
+        inertia = (Math.abs(vx) + Math.abs(vy) > .25) ? requestAnimationFrame(glide) : null;
+        if (!inertia) { var cc = clampView({x:view.x, y:view.y, s:view.s}); if (cc.x !== view.x || cc.y !== view.y) goTo(cc.x, cc.y, view.s, 250); }
+      })();
+    }
+    dk.addEventListener('pointerup', endDrag); dk.addEventListener('pointercancel', endDrag);
+    dk.addEventListener('wheel', function(e){
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY) * 1.4 || e.shiftKey) {
+        e.preventDefault(); stopMotion(); touched = true; hideHint();
+        view.x -= (e.deltaX || e.deltaY); view = clampView(view); render();
+      }
+    }, {passive:false});
+
+    /* survol : on met en avant tout le dossier du projet */
+    var relOn = null;
+    function setRel(proj){
+      if (relOn === proj) return; relOn = proj;
+      ITEMS.forEach(function(it){ it.el.classList.toggle('is-rel', !!proj && it.n === proj); });
+      dk.classList.toggle('is-focus', !!proj);
+    }
+    dk.addEventListener('mouseover', function(e){ if (drag) return; var it = itemOf(e.target); setRel(it ? it.n : null); });
+    dk.addEventListener('mouseleave', function(){ setRel(null); });
+    dk.addEventListener('focusin', function(e){
+      var it = itemOf(e.target); if (!it) return;
+      var vx = it.cx * view.s + view.x, vy = it.cy * view.s + view.y;
+      if (vx < 60 || vx > W - 60 || vy < 60 || vy > H - 60) centerOn(it.cx, it.cy, view.s, 500);
+      dk.scrollLeft = 0; dk.scrollTop = 0;
+    });
+    dk.addEventListener('keydown', function(e){
+      var it = itemOf(e.target);
+      if (it && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); openLb(it); return; }
+      var st = 160, m = {ArrowLeft:[st,0], ArrowRight:[-st,0], ArrowUp:[0,st], ArrowDown:[0,-st]}[e.key];
+      if (m && e.target === dk) { e.preventDefault(); touched = true; hideHint(); goTo(view.x + m[0], view.y + m[1], view.s, 300); }
+    });
+    dk.addEventListener('scroll', function(){ dk.scrollLeft = 0; dk.scrollTop = 0; });
+
+    /* ===== visionneuse : zoom molette / pincement / glisser, miniatures ===== */
+    var lb = document.getElementById('pfLb'), stage = document.getElementById('pfVStage'), vimg = document.getElementById('pfVImg');
+    var zoomVal = document.getElementById('pfZoomVal'), thumbsEl = document.getElementById('pfVThumbs'), vcap = document.getElementById('pfVCap');
+    var vs = 1, vx = 0, vy = 0, vIdx = 0, vlist = [], ptrs = {}, pinch0 = null, moved = false, vSwipe = null, lastFocus = null;
+    function clamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
+    function vClamp(){
+      var iw = vimg.offsetWidth * vs, ih = vimg.offsetHeight * vs;
+      var mx = Math.max(0, (iw - stage.clientWidth) / 2 + 24), my = Math.max(0, (ih - stage.clientHeight) / 2 + 24);
+      vx = clamp(vx, -mx, mx); vy = clamp(vy, -my, my);
+    }
+    var hdLoading = {};
+    function ensureHd(){
+      if (vs < 1.35) return;
+      var it = vlist[vIdx]; if (!it || !it.hd) return;
+      var i = vIdx, u = it.hd;
+      if (vimg.dataset.hd === String(i) || hdLoading[u]) return;
+      hdLoading[u] = true;
+      var pre = new Image();
+      pre.onload = function(){ hdLoading[u] = false; if (vIdx === i && vlist[i] === it) { vimg.src = u; vimg.dataset.hd = String(i); } };
+      pre.onerror = function(){ hdLoading[u] = false; };
+      pre.src = u;
+    }
+    function vRender(anim){
+      vimg.style.transition = anim ? 'transform .3s cubic-bezier(.2,.7,.2,1)' : 'none';
+      vimg.style.transform = 'translate(' + vx.toFixed(1) + 'px,' + vy.toFixed(1) + 'px) scale(' + vs.toFixed(3) + ')';
+      zoomVal.textContent = Math.round(vs * 100) + '%';
+      stage.classList.toggle('is-zoomed', vs > 1.02);
+      ensureHd();
+    }
+    function zoomAt(ns, cx, cy, anim){
+      ns = clamp(ns, 1, 4);
+      var r = stage.getBoundingClientRect(), px = cx - (r.left + r.width / 2), py = cy - (r.top + r.height / 2);
+      var qx = (px - vx) / vs, qy = (py - vy) / vs;
+      vx = px - qx * ns; vy = py - qy * ns; vs = ns;
+      if (ns <= 1.001) { vx = 0; vy = 0; vs = 1; }
+      vClamp(); vRender(anim);
+    }
+    function vCenter(){ var r = stage.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; }
+    function buildThumbs(){
+      thumbsEl.innerHTML = '';
+      vlist.forEach(function(it, i){
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'pf-vthumb'; b.setAttribute('aria-label', it.n + ' — ' + it.t + (it.frag ? ' : ' + it.s : ''));
+        var im = document.createElement('img'); im.alt = ''; im.loading = 'lazy'; im.decoding = 'async'; im.dataset.src = it.src; b.appendChild(im);
+        b.addEventListener('click', function(){ vShow(i); });
+        thumbsEl.appendChild(b);
+      });
+    }
+    function vShow(i){
+      vIdx = (i + vlist.length) % vlist.length; var it = vlist[vIdx];
+      vs = 1; vx = 0; vy = 0; vRender(false);
+      vimg.dataset.hd = ''; vimg.src = it.full; vimg.alt = it.alt;
+      vimg.classList.remove('pf-pop'); void vimg.offsetWidth; vimg.classList.add('pf-pop');
+      vcap.innerHTML = '<strong><em>' + it.n + '</em>' + esc(it.t) + '</strong><span>' + esc(it.s) + '</span>';
+      Array.prototype.forEach.call(thumbsEl.children, function(b, k){
+        b.classList.toggle('on', k === vIdx);
+        var im = b.firstChild; if (!im.src) im.src = im.dataset.src;
+        if (k === vIdx && b.scrollIntoView) { try { b.scrollIntoView({block:'nearest', inline:'center'}); } catch(e){} }
+      });
+    }
+    function openLb(it, list){
+      vlist = list || ITEMS.filter(visible); buildThumbs();
+      lastFocus = it.el; vShow(Math.max(0, vlist.indexOf(it)));
+      lb.classList.add('open'); lb.setAttribute('aria-hidden', 'false');
+      document.getElementById('pfLbClose').focus({preventScroll:true});
+    }
+    function closeLb(){ lb.classList.remove('open'); lb.setAttribute('aria-hidden', 'true'); if (lastFocus) { try { lastFocus.focus({preventScroll:true}); } catch(e){} } }
+    stage.addEventListener('wheel', function(e){
+      e.preventDefault();
+      zoomAt(vs * Math.exp(-e.deltaY * .002), e.clientX, e.clientY, false);
+    }, {passive:false});
+    stage.addEventListener('pointerdown', function(e){
+      stage.setPointerCapture && stage.setPointerCapture(e.pointerId);
+      ptrs[e.pointerId] = {x:e.clientX, y:e.clientY};
+      moved = false;
+      var ids = Object.keys(ptrs);
+      if (ids.length === 2) {
+        var a = ptrs[ids[0]], b = ptrs[ids[1]];
+        pinch0 = {d: Math.hypot(a.x - b.x, a.y - b.y), s: vs};
+      } else { vSwipe = {x:e.clientX, y:e.clientY}; }
+    });
+    stage.addEventListener('pointermove', function(e){
+      var p = ptrs[e.pointerId]; if (!p) return;
+      var dx = e.clientX - p.x, dy = e.clientY - p.y;
+      p.x = e.clientX; p.y = e.clientY;
+      var ids = Object.keys(ptrs);
+      if (ids.length === 2 && pinch0) {
+        var a = ptrs[ids[0]], b = ptrs[ids[1]];
+        var d = Math.hypot(a.x - b.x, a.y - b.y);
+        zoomAt(pinch0.s * d / pinch0.d, (a.x + b.x) / 2, (a.y + b.y) / 2, false); moved = true; return;
+      }
+      if (Math.abs(e.clientX - (vSwipe ? vSwipe.x : e.clientX)) > 4 || Math.abs(e.clientY - (vSwipe ? vSwipe.y : e.clientY)) > 4) moved = true;
+      if (vs > 1.02) { vx += dx; vy += dy; vClamp(); vRender(false); stage.classList.add('is-drag'); }
+    });
+    function pEnd(e){
+      var was = ptrs[e.pointerId]; delete ptrs[e.pointerId]; stage.classList.remove('is-drag');
+      if (Object.keys(ptrs).length < 2) pinch0 = null;
+      if (!was || Object.keys(ptrs).length) return;
+      if (e.type === 'pointerup' && vSwipe) {
+        var dx = e.clientX - vSwipe.x, dy = e.clientY - vSwipe.y;
+        if (vs <= 1.02 && Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.4) { vShow(vIdx + (dx < 0 ? 1 : -1)); vSwipe = null; return; }
+        if (!moved) {
+          if (e.target === vimg) { if (vs > 1.02) zoomAt(1, e.clientX, e.clientY, true); else zoomAt(2.4, e.clientX, e.clientY, true); }
+          else closeLb();
+        }
+      }
+      vSwipe = null;
+    }
+    stage.addEventListener('pointerup', pEnd); stage.addEventListener('pointercancel', pEnd);
+    document.getElementById('pfZoomIn').addEventListener('click', function(){ var c = vCenter(); zoomAt(vs * 1.5, c[0], c[1], true); });
+    document.getElementById('pfZoomOut').addEventListener('click', function(){ var c = vCenter(); zoomAt(vs / 1.5, c[0], c[1], true); });
+    document.getElementById('pfLbClose').addEventListener('click', closeLb);
+    document.getElementById('pfLbPrev').addEventListener('click', function(){ vShow(vIdx - 1); });
+    document.getElementById('pfLbNext').addEventListener('click', function(){ vShow(vIdx + 1); });
+    document.addEventListener('keydown', function(e){
+      if (!lb.classList.contains('open')) return;
+      if (e.key === 'Escape') closeLb();
+      if (e.key === 'ArrowLeft') vShow(vIdx - 1);
+      if (e.key === 'ArrowRight') vShow(vIdx + 1);
+      if (e.key === '+' || e.key === '=') { var c = vCenter(); zoomAt(vs * 1.4, c[0], c[1], true); }
+      if (e.key === '-') { var c2 = vCenter(); zoomAt(vs / 1.4, c2[0], c2[1], true); }
+      if (e.key === '0') { var c3 = vCenter(); zoomAt(1, c3[0], c3[1], true); }
+    });
+    window.addEventListener('resize', function(){ if (lb.classList.contains('open')) { vClamp(); vRender(false); } });
+
+  })();
+  </script>
 
   <div class="rubrique-band" aria-hidden="true"></div>
 
