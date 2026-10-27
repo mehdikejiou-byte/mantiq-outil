@@ -1445,7 +1445,7 @@ h1.h1-inv .grad-text{ font-weight:800 !important; }
 .dk-wrap.is-fit .dk{ -webkit-mask-image:none; mask-image:none; cursor:default; }
 .dk-wrap.is-fit .dk-ui, .dk-wrap.is-fit .dk-hint{ display:none; }
 .dk-tilt{ position:absolute; inset:0; transform-style:preserve-3d; will-change:transform; }
-.dk-world{ position:absolute; left:0; top:0; width:2900px; height:1800px; transform-origin:0 0; transform-style:preserve-3d; will-change:transform; }
+.dk-world{ position:absolute; left:0; top:0; width:2900px; height:1960px; transform-origin:0 0; transform-style:preserve-3d; will-change:transform; }
 .dk-ghost{ position:absolute; font-family:"Manrope",sans-serif; font-weight:800; line-height:.8; letter-spacing:-.04em; color:rgba(0,103,98,.075); pointer-events:none; font-size:360px; white-space:nowrap; transform:translateZ(-180px); }
 .dk-intro{ position:absolute; left:0; top:0; width:520px; pointer-events:none; color:var(--teal-900); transition:opacity .4s ease; }
 .dk-intro b{ display:inline-block; font-family:"Manrope",sans-serif; font-weight:800; font-size:120px; line-height:.9; letter-spacing:-.05em; background:linear-gradient(90deg,var(--teal-800),var(--lime-600)); -webkit-background-clip:text; background-clip:text; color:transparent; }
@@ -1566,6 +1566,19 @@ h1.h1-inv .grad-text{ font-weight:800 !important; }
 }
 @media (prefers-reduced-motion:reduce){ .dk-item, .dk-card, .dk-note, .dk-hint{ transition-duration:.01s !important; } }
 
+/* Réalisations : intro et portfolio plus rapprochés */
+.on-mint:has(+ .pf-section){ padding-bottom:24px; }
+.pf-section .pf-grid{ margin-top:0; }
+@media (max-width:900px){ .on-mint:has(+ .pf-section){ padding-bottom:18px; } }
+
+/* cadres de projets */
+.dk-zone{ position:absolute; border-radius:30px; border:1.5px dashed rgba(1,59,64,.26); background:rgba(255,255,255,.42); pointer-events:none; transition:opacity .5s ease; }
+.dk-zone > span{ position:absolute; left:22px; bottom:18px; display:flex; align-items:center; gap:8px; font:700 11.5px/1 var(--font-body, inherit); letter-spacing:.14em; text-transform:uppercase; color:rgba(1,59,64,.62); }
+.dk-zone > span i{ font-style:normal; background:var(--teal-700, #02585f); color:#fff; border-radius:999px; padding:4px 7px 3px; letter-spacing:.06em; }
+.dk-zone.is-star{ border:1.5px solid rgba(165,195,25,.75); background:linear-gradient(180deg, rgba(220,235,150,.28), rgba(255,255,255,.4)); }
+.dk-zone.is-star > span i{ background:var(--lime-500, #a5c319); color:#013b40; }
+.dk-zone.is-off{ opacity:.18; }
+
 /* visionneuse (agrandissement) */
 .pf-viewer{ position:fixed; inset:0; z-index:999; background:rgba(5,18,16,.96); opacity:0; visibility:hidden; transition:opacity .28s ease, visibility 0s linear .28s; }
 .pf-viewer.open{ opacity:1; visibility:visible; transition:opacity .28s ease; }
@@ -1599,8 +1612,3 @@ h1.h1-inv .grad-text{ font-weight:800 !important; }
   .pf-vhint{ display:none; }
   .pf-vcap{ bottom:92px; }
 }
-
-/* Réalisations : intro et portfolio plus rapprochés */
-.on-mint:has(+ .pf-section){ padding-bottom:24px; }
-.pf-section .pf-grid{ margin-top:0; }
-@media (max-width:900px){ .on-mint:has(+ .pf-section){ padding-bottom:18px; } }

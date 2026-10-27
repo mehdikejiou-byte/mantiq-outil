@@ -156,6 +156,8 @@
       Object.assign(pg(8), {id:'p8', n:'08', cat:'campagne', t:'Albrecht Dürer', s:'Planche d’exposition, Musée régional de Champagne-Ardenne', alt:'Affichage : planche de présentation de l’exposition Albrecht Dürer', x:2180, y:920, r:0, w:520, ar:P}),
       Object.assign(fr('durer'), {id:'p8a', n:'08', cat:'campagne', t:'Albrecht Dürer', s:'L’affiche d’exposition', alt:'Albrecht Dürer : affiche d’exposition', x:2360, y:1339, r:0, w:160, ar:1/0.698})
     ];
+    /* deuxième rangée plus bas : plus d'air sous les fragments de la première */
+    ITEMS.forEach(function(it){ if (it.y >= 900) it.y += 190; });
     /* échange d'emplacements : Terre de Mai <-> La Casbah, Musée de la Magie <-> Albrecht Dürer, Rêves éveillés <-> Santé publique */
     (function(){
       var SH = {'02':[1380, 0], '04':[-1380, 0], '05':[2070, 0], '08':[-2070, 0], '06':[690, 0], '07':[-690, 0]};
@@ -204,6 +206,20 @@
       });
     }
     recomputeBox();
+    /* un cadre doux par projet, pour bien distinguer les ensembles */
+    var ZONES = [];
+    (function(){
+      var g = {}, order = [];
+      ITEMS.forEach(function(it){ if (it.n === '01') return; if (!g[it.n]) { g[it.n] = []; order.push(it.n); } g[it.n].push(it); });
+      order.forEach(function(n){
+        var l = g[n], x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9, star = l.some(function(it){ return it.star; });
+        l.forEach(function(it){ x0 = Math.min(x0, it.x); y0 = Math.min(y0, it.y); x1 = Math.max(x1, it.x + it.w); y1 = Math.max(y1, it.y + it.h); });
+        var d = document.createElement('div'); d.className = 'dk-zone' + (star ? ' is-star' : ''); d.setAttribute('aria-hidden', 'true');
+        d.style.left = (x0 - 28) + 'px'; d.style.top = (y0 - 56) + 'px'; d.style.width = (x1 - x0 + 56) + 'px'; d.style.height = (y1 - y0 + 56 + 62) + 'px';
+        d.innerHTML = '<span><i>' + n + '</i>' + esc(l[0].t) + '</span>';
+        world.insertBefore(d, world.firstChild); ZONES.push({el:d, items:l});
+      });
+    })();
     /* décor : mots fantômes en retrait (profondeur) */
     [['Portfolio', 80, -130], ['mantiQ', 1450, 1330]].forEach(function(g){
       var d = document.createElement('div'); d.className = 'dk-ghost'; d.textContent = g[0]; d.setAttribute('aria-hidden', 'true');
@@ -289,6 +305,7 @@
       filter = k; touched = true; dk.classList.toggle('is-filtered', k !== 'all'); hideHint(); overview = false; setOverviewLabel();
       Array.prototype.forEach.call(bar.children, function(b){ var on = b.dataset.k === k; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
       ITEMS.forEach(function(it){ var v = visible(it); it.el.classList.toggle('is-off', !v); it.el.tabIndex = v ? 0 : -1; if (!v) it.el.setAttribute('aria-hidden', 'true'); else it.el.removeAttribute('aria-hidden'); });
+      ZONES.forEach(function(zn){ zn.el.classList.toggle('is-off', !zn.items.some(visible)); });
       layoutMini();
       if (fitMode) return; if (k === 'all') home(); else { var f = fitBox(ITEMS.filter(visible)); centerOn(f.x, f.y, Math.max(.4, Math.min(f.s * .94, 1)), 800); }
     }
@@ -412,7 +429,7 @@
       if (drag.item) {
         var it = drag.item;
         it.x += dx / view.s; it.y += dy / view.s; it.cx = it.x + it.w / 2; it.cy = it.y + it.h / 2;
-        it.x = Math.max(-40, Math.min(2900 - it.w + 40, it.x)); it.y = Math.max(-20, Math.min(1800 - it.h + 40, it.y));
+        it.x = Math.max(-40, Math.min(2900 - it.w + 40, it.x)); it.y = Math.max(-20, Math.min(1990 - it.h + 40, it.y));
         place(it); it.mm.style.left = (it.x * MM + mmX) + 'px'; it.mm.style.top = (it.y * MM + mmY) + 'px';
       } else {
         view.x += dx; view.y += dy; var c = {x:view.x, y:view.y, s:view.s}; clampView(c);
